@@ -100,9 +100,12 @@
       eval %sh{kak-lsp --kakoune -s $kak_session}  # Not needed if you load it with plug.kak.
       lsp-enable
       map global normal <c-p> ':fzf-mode<ret>'
+      map global normal '#' ':comment-line<ret>'
       add-highlighter global/ show-whitespaces
       add-highlighter global/ number-lines -hlcursor
       add-highlighter global/ regex \h+$ 0:Error
+
+      try %{ source "%val{config}/unmanaged.kak" } catch %{}
     '';
   };
 
