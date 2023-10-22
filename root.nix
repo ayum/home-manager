@@ -33,6 +33,8 @@
     pkgs.iotop
     pkgs.zip
     pkgs.unzip
+    pkgs.silver-searcher
+    pkgs.fzf
   ];
 
   targets.genericLinux.enable = true;
