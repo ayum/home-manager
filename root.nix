@@ -96,6 +96,16 @@
     '';
   };
 
+
+  home.file."${config.xdg.configHome}/kak/colors".source =
+    let
+      kakoune-themes = pkgs.fetchFromGitHub {
+        owner = "anhsirk0";
+        repo = "kakoune-themes";
+        rev = "910a3fd7196f360c66e8cf5608870a98483f2a6d";
+        hash = "sha256-mqVMdfgZW22qGfWuVNru/yRdKIlbWk/iG6iuQI2T+4M=";
+      };
+    in "${kakoune-themes}/colors";
   programs.kakoune = {
     enable = true;
     defaultEditor = true;
@@ -112,7 +122,18 @@
           option = ".*";
           commands = "editorconfig-load";
         }
+        {
+          name = "ModuleLoaded";
+          option = "tmux";
+          commands = "alias global terminal tmux-terminal-vertical";
+        }
+        {
+          name = "RegisterModified";
+          option = "/";
+          commands = ''add-highlighter -override global/search regex "%reg{/}" 0:CurSearch'';
+        }
       ];
+      colorScheme = "mygruvbox";
     };
     extraConfig = ''
       eval %sh{kak-lsp --kakoune -s $kak_session}  # Not needed if you load it with plug.kak.
@@ -120,8 +141,10 @@
       map global normal <c-p> ':fzf-mode<ret>'
       map global normal '#' ':comment-line<ret>'
       add-highlighter global/ show-whitespaces
+      add-highlighter global/ show-matching
       add-highlighter global/ number-lines -hlcursor
       add-highlighter global/ regex \h+$ 0:Error
+      set-face global CurSearch +u
 
       try %{ source "%val{config}/unmanaged.kak" } catch %{}
     '';
