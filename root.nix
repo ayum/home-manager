@@ -22,6 +22,13 @@
 
   # Packages that should be installed to the user profile.
   home.packages = [
+    pkgs.nodePackages_latest.bash-language-server
+    pkgs.cmake-language-server
+    pkgs.nodePackages_latest.vscode-json-languageserver
+    pkgs.rnix-lsp
+    pkgs.yaml-language-server
+    pkgs.zls
+    pkgs.python311Packages.python-lsp-server
     pkgs.clang-tools_16
     pkgs.kak-lsp
     pkgs.editorconfig-core-c
