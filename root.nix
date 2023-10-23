@@ -42,6 +42,7 @@
     pkgs.unzip
     pkgs.silver-searcher
     pkgs.fzf
+    pkgs.python313
   ];
 
   targets.genericLinux.enable = true;
@@ -67,7 +68,7 @@
     enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "tmux" ];
+      plugins = [ "git" "tmux" "python" ];
       theme = "robbyrussell";
     };
     initExtra = ''
