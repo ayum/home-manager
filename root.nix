@@ -65,6 +65,11 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  home.file."${config.xdg.configHome}/clangd/config.yaml".text = ''
+    CompileFlags:
+      Add: [--include-directory=/usr/include]
+  '';
+
   programs.zsh = {
     enable = true;
     oh-my-zsh = {
