@@ -133,6 +133,20 @@
           commands = ''add-highlighter -override global/search regex "%reg{/}" 0:CurSearch'';
         }
       ];
+      keyMappings = [
+        {
+          key = "l";
+          mode = "user";
+          docstring = "lsp mode";
+          effect = ":enter-user-mode lsp<ret>";
+        }
+        {
+          key = "p";
+          mode = "user";
+          docstring = "fzf mode";
+          effect = ":fzf-mode<ret>";
+        }
+      ];
       colorScheme = "mygruvbox";
     };
     extraConfig = ''
