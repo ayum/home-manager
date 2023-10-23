@@ -87,8 +87,11 @@
   programs.tmux = {
     enable = true;
     historyLimit = 12345678;
+    terminal = "tmux-256color";
+    escapeTime = 25;
+    clock24 = true;
+    aggressiveResize = true;
     extraConfig = ''
-      set -sg escape-time 25
     '';
   };
 
