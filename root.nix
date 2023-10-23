@@ -91,6 +91,7 @@
     escapeTime = 25;
     clock24 = true;
     aggressiveResize = true;
+    shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
     '';
   };
