@@ -135,6 +135,7 @@
       co = "checkout";
       br = "branch";
       st = "status";
+      rp = "rev-parse";
     };
     difftastic = {
       enable = true;
