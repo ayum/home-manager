@@ -1,4 +1,4 @@
-{ pkgs, home-manager, ... }:
+{ pkgs, home-manager, config, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -60,7 +60,7 @@
     enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" ];
+      plugins = [ "git" "tmux" ];
       theme = "robbyrussell";
     };
     initExtra = ''
@@ -68,7 +68,11 @@
       setopt inc_append_history
     '';
     shellAliases = {
-      tmu = "tmux new -As0";
+    };
+    sessionVariables = {
+      ZSH_TMUX_AUTOSTART = true;
+      ZSH_TMUX_UNICODE = true;
+      ZSH_TMUX_CONFIG = "${config.xdg.configHome}/tmux/tmux.conf";
     };
   };
 
