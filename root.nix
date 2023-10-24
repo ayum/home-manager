@@ -170,6 +170,12 @@
           docstring = "fzf mode";
           effect = ":fzf-mode<ret>";
         }
+        {
+          key = "r";
+          mode = "user";
+          docstring = "registers view";
+          effect = ":info-registers<ret>";
+        }
       ];
       colorScheme = "mygruvbox";
     };
