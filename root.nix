@@ -99,6 +99,10 @@
     aggressiveResize = true;
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
+      bind S-Up move-pane -h -t '.{up-of}'
+      bind S-Right move-pane -t '.{right-of}'
+      bind S-Left move-pane -t '.{left-of}'
+      bind S-down move-pane -h -t '.{down-of}'
     '';
   };
 
