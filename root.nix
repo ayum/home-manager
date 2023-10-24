@@ -180,6 +180,16 @@
           docstring = "registers view";
           effect = ":info-registers<ret>";
         }
+        {
+          key = "/";
+          mode = "normal";
+          effect = "/(?i)";
+        }
+        {
+          key = "<c-U>";
+          mode = "prompt";
+          effect = "<c-u>(?i)";
+        }
       ];
       colorScheme = "mygruvbox";
     };
