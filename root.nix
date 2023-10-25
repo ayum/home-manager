@@ -190,11 +190,6 @@
           mode = "normal";
           effect = "<a-/>(?i)";
         }
-        {
-          key = "<c-U>";
-          mode = "prompt";
-          effect = "<c-u>(?i)";
-        }
       ];
       colorScheme = "mygruvbox";
     };
