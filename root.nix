@@ -58,9 +58,17 @@
   # changes in each release.
   home.stateVersion = "23.11";
 
-#  xdg.configFile = {
-#    "home-manager".source = self;
-#  };
+  xdg = {
+    enable = true;
+  };
+
+  nix = {
+    enable = true;
+    package = pkgs.nix;
+    settings = {
+      use-xdg-base-directories = true;
+    };
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
