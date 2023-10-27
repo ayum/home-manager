@@ -111,6 +111,7 @@
       bind S-Right move-pane -t '.{right-of}'
       bind S-Left move-pane -t '.{left-of}'
       bind S-down move-pane -h -t '.{down-of}'
+      set -g allow-passthrough on
     '';
   };
 
