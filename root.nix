@@ -190,14 +190,9 @@
           effect = ":info-registers<ret>";
         }
         {
-          key = "/";
-          mode = "normal";
-          effect = "/(?i)";
-        }
-        {
-          key = "<a-/>";
-          mode = "normal";
-          effect = "<a-/>(?i)";
+          key = "<a-i>";
+          mode = "prompt";
+          effect = "(?i)";
         }
       ];
       colorScheme = "mygruvbox";
