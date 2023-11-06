@@ -43,7 +43,6 @@
     pkgs.silver-searcher
     pkgs.fzf
     pkgs.python313
-    pkgs.scons
   ];
 
   targets.genericLinux.enable = true;
