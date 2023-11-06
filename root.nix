@@ -90,6 +90,16 @@
     initExtra = ''
       unsetopt share_history
       setopt inc_append_history
+
+      function ka () {
+        kak -clear;
+        session=$(kak -l | head -1);
+        if test -z $session; then
+          kak -s default "$@"
+        else
+          kak -c $session "$@"
+        fi
+      }
     '';
     shellAliases = {
     };
