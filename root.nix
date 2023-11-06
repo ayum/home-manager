@@ -84,6 +84,9 @@
       enable = true;
       plugins = [ "git" "tmux" "python" ];
       theme = "robbyrussell";
+      extraConfig = ''
+        DISABLE_AUTO_UPDATE=true
+      '';
     };
     initExtra = ''
       unsetopt share_history
