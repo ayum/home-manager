@@ -127,16 +127,6 @@
     '';
   };
 
-
-  home.file."${config.xdg.configHome}/kak/plugins/kakoune-registers".source =
-    let
-      kakoune-registers = pkgs.fetchFromGitHub {
-        owner = "Delapouite";
-        repo = "kakoune-registers";
-        rev = "b8ca8e04ebe50671a937bceccba69c62b68ae8b0";
-        sha256 = "k9EGgf9VEbDATmI0s0owwzfZ5aoWbjAZw714Kg1rxW8=";
-      };
-    in "${kakoune-registers}";
   home.file."${config.xdg.configHome}/kak/colors".source =
     let
       kakoune-themes = pkgs.fetchFromGitHub {
@@ -152,6 +142,7 @@
     plugins = [
       pkgs.kakounePlugins.kak-fzf
       pkgs.kakounePlugins.kak-byline
+      pkgs.kakounePlugins.kakoune-registers
     ];
     config = {
       hooks = [
@@ -214,7 +205,6 @@
       add-highlighter global/ regex \h+$ 0:Error
       set-face global CurSearch +u
 
-      source "%val{config}/plugins/kakoune-registers/registers.kak"
       require-module "byline"
 
       try %{ source "%val{config}/unmanaged.kak" } catch %{}
