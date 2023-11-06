@@ -127,15 +127,6 @@
         sha256 = "k9EGgf9VEbDATmI0s0owwzfZ5aoWbjAZw714Kg1rxW8=";
       };
     in "${kakoune-registers}";
-  home.file."${config.xdg.configHome}/kak/plugins/byline.kak".source =
-    let
-      byline.kak = pkgs.fetchFromGitHub {
-        owner = "evanrelf";
-        repo = "byline.kak";
-        rev = "a27d109b776c60e11752eeb3207c989a5e157fc0";
-        sha256 = "Aa0UnioD20HfGiTtC7Tmbs+xYgaytz3pUsXQWkzrLYg=";
-      };
-    in "${byline.kak}";
   home.file."${config.xdg.configHome}/kak/colors".source =
     let
       kakoune-themes = pkgs.fetchFromGitHub {
@@ -148,7 +139,10 @@
   programs.kakoune = {
     enable = true;
     defaultEditor = true;
-    plugins = [ pkgs.kakounePlugins.kak-fzf ];
+    plugins = [
+      pkgs.kakounePlugins.kak-fzf
+      pkgs.kakounePlugins.kak-byline
+    ];
     config = {
       hooks = [
         {
@@ -200,8 +194,9 @@
       colorScheme = "mygruvbox";
     };
     extraConfig = ''
-      eval %sh{kak-lsp --kakoune -s $kak_session}  # Not needed if you load it with plug.kak.
+      eval %sh{kak-lsp --kakoune -s $kak_session}
       lsp-enable
+
       map global normal '#' ':comment-line<ret>'
       add-highlighter global/ show-whitespaces
       add-highlighter global/ show-matching
@@ -210,7 +205,6 @@
       set-face global CurSearch +u
 
       source "%val{config}/plugins/kakoune-registers/registers.kak"
-      source "%val{config}/plugins/byline.kak/rc/byline.kak"
       require-module "byline"
 
       try %{ source "%val{config}/unmanaged.kak" } catch %{}
