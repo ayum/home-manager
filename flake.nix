@@ -1,5 +1,5 @@
 {
-  description = "My home-manager configuration of root";
+  description = "My nix configurations";
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
@@ -10,18 +10,21 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixos, np, home-manager, ... }:
+  outputs = { nixos, np, disko, home-manager, ... } @ inputs:
     let
       system = "x86_64-linux";
-      pkgs = np.legacyPackages.${system};
+      pkgs = import np {
+          inherit system;
+          config.allowUnfree = true;
+      };
     in {
       homeConfigurations."root" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
         modules = [
           ./home-manager/root.nix
         ];
@@ -29,10 +32,24 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
       };
-      nixosConfigurations."dev.ayum.ru" = nixos.lib.nixosSystem {
-        modules = [
-          ./nixos/dev.ayum.ru.nix
-        ];
-      };
+      nixosConfigurations."dev" = let
+        hardwareConfiguration = ./nixos/hardware/generic-vps.nix;
+        np = pkgs;
+      in
+        nixos.lib.nixosSystem {
+          specialArgs = { inherit inputs hardwareConfiguration np; };
+          modules = [
+            disko.nixosModules.disko
+            # { disko.devices.disk.disk1.device = "/dev/vda"; }
+            ./nixos/dev/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true; # makes hm use nixos's pkgs value
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs pkgs; }; # allows access to flake inputs in hm modules
+              home-manager.users.root = import ./home-manager/root.nix;
+            }
+          ];
+        };
     };
 }
