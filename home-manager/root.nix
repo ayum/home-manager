@@ -170,7 +170,7 @@
         {
           name = "BufWritePre";
           option = ".*";
-          commands = ''%{ try %{ execute-keys -draft \%s\h+$<ret>d } }'';
+          commands = ''try %{ execute-keys -draft \%s\h+$<ret>d }'';
         }
       ];
       keyMappings = [
@@ -197,23 +197,37 @@
           mode = "prompt";
           effect = "(?i)";
         }
+        {
+          key = ".";
+          mode = "user";
+          docstring = "resource kakrc";
+          effect = '':source "%val{config}/kakrc"<ret>'';
+        }
       ];
       colorScheme = "mygruvbox";
     };
     extraConfig = ''
-      eval %sh{kak-lsp --kakoune -s $kak_session}
-      lsp-enable
+
+      declare-option -hidden bool init_done
 
       map global normal '#' ':comment-line<ret>'
-      add-highlighter global/ show-whitespaces
-      add-highlighter global/ show-matching
-      add-highlighter global/ number-lines -hlcursor
-      add-highlighter global/ regex \h+$ 0:Error
+      add-highlighter -override global/ show-whitespaces
+      add-highlighter -override global/ show-matching
+      add-highlighter -override global/ number-lines -hlcursor
+      add-highlighter -override global/ regex \h+$ 0:Error
       set-face global CurSearch +u
 
       require-module "byline"
 
+      eval %sh{
+        $kak_opt_init_done && exit
+        kak-lsp --kakoune -s $kak_session
+      }
+      try %{ lsp-enable }
+
       try %{ source "%val{config}/unmanaged.kak" } catch %{}
+
+      set-option global init_done true
     '';
   };
 
