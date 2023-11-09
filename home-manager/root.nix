@@ -167,6 +167,11 @@
           option = "/";
           commands = ''add-highlighter -override global/search regex "%reg{/}" 0:CurSearch'';
         }
+        {
+          name = "BufWritePre";
+          option = ".*";
+          commands = ''%{ try %{ execute-keys -draft \%s\h+$<ret>d } }'';
+        }
       ];
       keyMappings = [
         {
