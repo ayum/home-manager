@@ -172,6 +172,21 @@
           option = ".*";
           commands = ''try %{ execute-keys -draft \%s\h+$<ret>d }'';
         }
+        {
+          name = "FocusOut";
+          option = ".*";
+          commands = "try %{ write }";
+        }
+        {
+          name = "ModeChange";
+          option = ".*:insert:.*";
+          commands = "try %{ write }";
+        }
+        {
+          name = "NormalIdle";
+          option = ".*";
+          commands = "try %{ write }";
+        }
       ];
       keyMappings = [
         {
