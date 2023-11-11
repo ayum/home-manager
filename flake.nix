@@ -18,15 +18,23 @@
     let
       system = "x86_64-linux";
       pkgs = import np {
-          inherit system;
-          config.allowUnfree = true;
+        inherit system;
+        config.allowUnfree = true;
+      };
+      homeModules = {
+        ayumsecrets = import ./home-modules/ayumsecrets.nix;
+        ayumprofile = import ./home-modules/ayumprofile.nix; 
       };
     in {
+      inherit homeModules;
       homeConfigurations."root" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [
           ./home-manager/root.nix
+          ./home-manager/mail.nix
+          homeModules.ayumprofile
+          homeModules.ayumsecrets
         ];
 
         # Optionally use extraSpecialArgs
@@ -47,7 +55,11 @@
               home-manager.useGlobalPkgs = true; # makes hm use nixos's pkgs value
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs pkgs; }; # allows access to flake inputs in hm modules
-              home-manager.users.root = import ./home-manager/root.nix;
+              home-manager.users.root.imports = [
+                ./home-manager/root.nix
+                homeModules.ayumprofile
+                homeModules.ayumsecrets
+              ];
             }
           ];
         };
