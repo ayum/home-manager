@@ -102,6 +102,9 @@
         fi
       }
     '';
+    profileExtra = ''
+      emulate sh -c '. ~/.profile'
+    '';
     shellAliases = {
     };
     sessionVariables = {
