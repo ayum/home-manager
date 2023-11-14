@@ -56,6 +56,7 @@
 
         modules = [
           ./home-manager/me.nix
+          homeModules.ayumprofile
         ];
       };
       nixosConfigurations."dev" = let

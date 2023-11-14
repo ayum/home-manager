@@ -48,7 +48,8 @@ ayumdecrypt () {
   if test ! -e "$f" || test $(${pkgs.coreutils}/bin/stat -c %Y "$f") -eq 1; then
     ${pkgs.coreutils}/bin/install -D /dev/null "$f"
     ${pkgs.coreutils}/bin/rm -f "$f"
-    ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo "Decrypted ${config.home.homeDirectory}/$fname"
+    printf "%s" "Decrypting ${config.home.homeDirectory}/$fname"
+    ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo " ok" || false
     ${pkgs.coreutils}/bin/chmod +t "$f"
   fi
 }
@@ -95,6 +96,7 @@ in
         logoutHooks = [''
           userid=$(${pkgs.coreutils}/bin/id -ru)
           ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.gnupg/S.gpg-agent"
+          ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.gnupg/S.gpg-agent.ssh"
           test -f /run/user/$userid/gnupg && ${pkgs.coreutils}/bin/rm -f /run/user/$userid/gnupg;
         ''];
       };
@@ -108,7 +110,7 @@ in
           text = "${secret.ciphertext}";
           onChange = ''
             userid=$(${pkgs.coreutils}/bin/id -ru)
-            ${pkgs.coreutils}/bin/touch -m --date=@1 "/run/user/$userid/ayum/secrets/${secretPath}" 
+            test -f "/run/user/$userid/ayum/secrets/${secretPath}" && ${pkgs.coreutils}/bin/touch -m --date=@1 "/run/user/$userid/ayum/secrets/${secretPath}" 
           '';
         };
       }
