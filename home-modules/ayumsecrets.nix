@@ -31,8 +31,8 @@ ayumsecretstargetdir=/run/user/$userid/ayum/secrets
 secretsdir=${secretsDir}
 cleanup () { :; }
 trap '[ $? -eq 0 ] && { cleanup; exit 0; } || { cleanup; echo "Decryption failed for all or some secrets. Disconnecting"; exit 1; }' EXIT
-${pkgs.gnupg}/bin/gpgconf --kill gpg-agent || :
-${pkgs.gnupg}/bin/gpgconf --remove-socketdir || :
+${pkgs.gnupg}/bin/gpgconf --kill gpg-agent 1>&2 2>/dev/null || :
+${pkgs.gnupg}/bin/gpgconf --remove-socketdir 1>&2 2>/dev/null || :
 ${pkgs.coreutils}/bin/rm -rf /run/user/$userid/gnupg
 ${pkgs.coreutils}/bin/touch  /run/user/$userid/gnupg 
 ${pkgs.gnupg}/bin/gpg-connect-agent --no-autostart -S "${config.home.homeDirectory}/.gnupg/S.gpg-agent" "GETINFO pid" /bye 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q -i forbidden || { echo "It seems that forwarded gpg-agent in not running, not decrypting anything"; false; }
