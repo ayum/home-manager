@@ -40,6 +40,13 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
       };
+      homeConfigurations."me" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        modules = [
+          ./home-manager/me.nix
+        ];
+      };
       nixosConfigurations."dev" = let
         hardwareConfiguration = ./nixos/hardware/generic-vps.nix;
         np = pkgs;
