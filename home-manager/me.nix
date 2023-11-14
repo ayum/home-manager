@@ -22,8 +22,14 @@
       "dev" = {
         extraOptions = {
           RequestTTY = "force";
-          RemoteCommand  = "zsh -l";
+          RemoteCommand  = "zsh";
         };
+      };
+      "github.com github gh" = {
+          hostname = "github.com";
+          user = "git";
+          identityFile = "~/.ssh/id_rsa";
+          identitiesOnly = true;
       };
     };
     forwardAgent = true;
