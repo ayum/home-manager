@@ -40,6 +40,17 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
       };
+      homeConfigurations."user" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        modules = [
+          ./home-manager/common.nix
+          {
+            home.username = "user";
+            home.homeDirectory = "/home/user";
+          }
+        ];
+      };
       homeConfigurations."me" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
