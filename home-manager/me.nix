@@ -81,6 +81,7 @@ Host *
     IdentitiesOnly no
     LocalCommand gpgconf --launch gpg-agent
 Match Host *.ayum.ru
+    VerifyHostKeyDNS yes
     RemoteForward /root/.gnupg/S.gpg-agent /run/user/%i/gnupg/S.gpg-agent.extra
     RemoteForward /root/.gnupg/S.gpg-agent.ssh /run/user/%i/gnupg/S.gpg-agent.ssh
 '';
