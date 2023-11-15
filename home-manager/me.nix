@@ -62,6 +62,7 @@
     matchBlocks = {
       "*sh.*" = {
         extraOptions = {
+          RemoteCommand = ''ayum_ssh_tmpfile=$(${pkgs.coreutils}/bin/mktemp); echo "%h" >$ayum_ssh_tmpfile; IFS="." read ayum_ssh_sh remaining <$ayum_ssh_tmpfile; exec $ayum_ssh_sh'';
           RequestTTY = "force";
         };
       };
