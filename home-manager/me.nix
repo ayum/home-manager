@@ -12,6 +12,31 @@
     pkgs.yubikey-manager
   ];
 
+  programs.foot = {
+    enable = true;
+    settings = {
+      main = {
+        font = "Inconsolata:size=10";
+        box-drawings-uses-font-glyphs = "no";
+        dpi-aware = "no";
+        term = "xterm-256color";
+        login-shell = "yes";
+      };
+      csd = {
+        preferred = "none";
+      };
+      mouse = {
+        alternate-scroll-mode = "yes";
+      };
+      key-bindings = {
+        clipboard-copy = "Control+Shift+c Control+Insert XF86Copy";
+        clipboard-paste = "Control+Shift+v Shift+Insert XF86Paste";
+        primary-paste = "none";
+        search-start = "Control+Shift+space";
+      };
+    };
+  };
+
   ayum.profile = {
     enable = true;
     extraLinesPrepend = ''
