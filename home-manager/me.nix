@@ -41,6 +41,7 @@
     enable = true;
     extraLines = (lib.optionalString (config.services.gpg-agent.enable && config.services.gpg-agent.enableSshSupport) ''
       echo $SSH_AUTH_SOCK | ${pkgs.gnugrep}/bin/grep -q 'gnupg\|gpg'; test $? -eq 0 || export SSH_AUTH_SOCK="$(${config.programs.gpg.package}/bin/gpgconf --list-dirs agent-ssh-socket)"
+      ${config.programs.gpg.package}/bin/gpg-connect-agent updatestartuptty /bye 1>/dev/null
     '');
   };
 
