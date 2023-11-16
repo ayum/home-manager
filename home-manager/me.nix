@@ -95,7 +95,8 @@ lkF+199m5on+DpBgn1+LSwv9maDDYntWH8bcOvinWw==
       };
     };
     forwardAgent = true;
-    controlMaster = "yes";
+    controlMaster = "auto";
+    controlPersist = "yes";
     extraConfig = ''
 Host *
     Hostname %h.ayum.ru
