@@ -6,6 +6,7 @@
   };
   ayum.secrets = {
     enable = true;
+    enableSsh = true;
     secrets = [
       {
         path = "${config.xdg.configHome}/aerc/accounts.conf";
@@ -21,7 +22,7 @@ da/0xnifl2q+NJHJaryHerBCVW2/Y6msjzFfzpjTRHJukFjuWlm/0rdyg6IaDy9N
 L+8gk+1qq0Wl/2tPkw8xZjaGbQ==
 =ken8
 -----END PGP MESSAGE-----
-        '';        
+        '';
       }
     ];
   };

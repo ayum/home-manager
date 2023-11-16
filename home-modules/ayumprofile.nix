@@ -51,6 +51,20 @@ in
           '';
         };
       };
+      loginHooks = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        description = ''
+          Hooks to execute on shell startup (only login shells).
+        '';
+      };
+      logoutHooks = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        description = ''
+          Hook to execute on shell teardown (only login shells).
+        '';
+      };
       ssh = {
         enable = mkOption {
           type = types.bool;
@@ -105,6 +119,8 @@ if [ $SESSION_TYPE = "remote/ssh" ]; then
 fi
 '')
 
+(optionalString (cfg.loginHooks != []) (concatStringsSep "\n" (cfg.loginHooks)))
+
 (optionalString (cfg.bash.enable)
 ''
 if [ -n "$BASH_VERSION" ]; then
@@ -127,11 +143,14 @@ ${cfg.extraLines}
     ]);
 
     home.file = {
-      ".profile_ssh_logout" = mkIf (cfg.ssh.enable && cfg.ssh.logoutHooks != []) {
+      ".profile_ssh_logout" = mkIf (cfg.enable && cfg.ssh.enable && cfg.ssh.logoutHooks != []) {
         text = (concatStringsSep "\n" (cfg.ssh.logoutHooks));
       };
-      ".profile_ssh" = mkIf (cfg.ssh.enable && cfg.ssh.loginHooks != []) {
+      ".profile_ssh" = mkIf (cfg.enable && cfg.ssh.enable && cfg.ssh.loginHooks != []) {
         text = (concatStringsSep "\n" (cfg.ssh.loginHooks));
+      };
+      ".profile_logout" = mkIf (cfg.enable && cfg.logoutHooks != []) {
+        text = (concatStringsSep "\n" (cfg.logoutHooks));
       };
     };
   };

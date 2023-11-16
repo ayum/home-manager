@@ -39,9 +39,31 @@
 
   ayum.profile = {
     enable = true;
-    extraLinesPrepend = ''
-      unset SSH_AUTH_SOCK
-    '';
+    extraLines = (lib.optionalString (config.services.gpg-agent.enable && config.services.gpg-agent.enableSshSupport) ''
+      echo $SSH_AUTH_SOCK | ${pkgs.gnugrep}/bin/grep -q 'gnupg\|gpg'; test $? -eq 0 || export SSH_AUTH_SOCK="$(${config.programs.gpg.package}/bin/gpgconf --list-dirs agent-ssh-socket)"
+    '');
+  };
+
+  ayum.secrets = {
+    enable = true;
+    enablePlaintextOnRest = true;
+    secrets = [
+      {
+        path = ".ssh/config.d/work";
+        ciphertext = ''
+-----BEGIN PGP MESSAGE-----
+
+hF4Dspzg4We8e9wSAQdACtjoL5LrrEU6VCIJBcWy/n5OwrFiFTOpzNWr2qX7iT8w
+KPTo36oAJ+1bg2/J9JNqkuXPlcDHfx5bc3+LHPZXfJhuOu3aD4oyFKD6PgJllJ1X
+0q0B8+8XkiGvdVMXyOh0qQ3Q7pk5aNYOUcuYRDPSZZ992SDgcyX7bRPTqOyGGWOf
+4ibsytQjo3Z5grEKbP+2GqVTbN0IKcntwo/JmH30hXqpUBB0p2nr4j4ubDL6JOPk
+SQaSxXdzckIAZCbe6qE6aCfDBMj/LwJ+5mBTdkNuG+x91Y0PWt/+AwAmvonUY4Oh
+lkF+199m5on+DpBgn1+LSwv9maDDYntWH8bcOvinWw==
+=G5Mu
+-----END PGP MESSAGE-----
+        '';
+      }
+    ];
   };
 
   services.ssh-agent.enable = false;

@@ -23,7 +23,7 @@
       };
       homeModules = {
         ayumsecrets = import ./home-modules/ayumsecrets.nix;
-        ayumprofile = import ./home-modules/ayumprofile.nix; 
+        ayumprofile = import ./home-modules/ayumprofile.nix;
       };
     in {
       inherit homeModules;
@@ -57,6 +57,7 @@
         modules = [
           ./home-manager/me.nix
           homeModules.ayumprofile
+          homeModules.ayumsecrets
         ];
       };
       nixosConfigurations."dev" = let
