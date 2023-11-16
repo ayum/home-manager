@@ -145,6 +145,7 @@
       pkgs.kakounePlugins.kak-fzf
       pkgs.kakounePlugins.kak-byline
       pkgs.kakounePlugins.kakoune-registers
+      pkgs.kakounePlugins.smarttab-kak
     ];
     config = {
       hooks = [
@@ -187,6 +188,14 @@
           name = "NormalIdle";
           option = ".*";
           commands = "try %{ write }";
+        }
+        {
+          name = "BufCreate";
+          option = ".*";
+          commands = ''
+            editorconfig-load
+            autoconfigtab
+          '';
         }
       ];
       keyMappings = [
