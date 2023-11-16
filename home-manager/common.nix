@@ -274,7 +274,10 @@
   };
 
   services.ssh-agent.enable = lib.mkDefault false;
-  services.gpg-agent.enable = lib.mkDefault false;
+  services.gpg-agent = {
+    enable = lib.mkDefault false;
+    pinentryFlavor = lib.mkDefault "curses";
+  };
   programs.gpg = {
     enable = true;
     publicKeys = [
