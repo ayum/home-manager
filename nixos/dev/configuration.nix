@@ -4,7 +4,6 @@
   inputs,
   lib,
   pkgs,
-  np,
   hardwareConfiguration,
   ...
 }: {
@@ -88,8 +87,7 @@
       initialPassword = "root";
       isNormalUser = false;
       openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCrj0ZAmSk1AK/1uHD07sDZKz8EAHPlcq54NVD7A/QjrxHNc6Re7n59DmZ+duLXo40MRT+iz9m1uoynu+TXYV6jBnA9y2sjDmUhNg5hbY1o0y7fh+HXye8qIg1Y6rxi36q8amFv3ywT5RXqP6fN7L3QZnAx9i4fQMhVGkACwxLC+QmeEXgVapPcMIh2j/J460pbfCXKCBiZfLxsT6DCd3MO+YWAvKdo5FgS3tih4qXprPl4HomcHbG+Fh5I61uHY37lwd/qcZZvTMWlZsCdf1A92zy8UvqsZIoiLtngIfbAryN0wZcE31tMZ3uAvvopBgCrt6ZdfXumrdsJn0Nc32L @home"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBYiRMp0kc8LEOAhaEkI7XwGRhqdUS2radGD6jNhZFT openpgp:0x79C95C07"
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = [ ];
@@ -128,7 +126,6 @@
 
   environment.systemPackages = map lib.lowPrio [
     # pkgs.curl
-    # np.curl
   ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
