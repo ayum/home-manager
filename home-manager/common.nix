@@ -76,6 +76,7 @@
       Add: [--include-directory=/usr/include]
   '';
 
+  programs.bash.enable = true;
   programs.zsh = {
     enable = true;
     oh-my-zsh = {
