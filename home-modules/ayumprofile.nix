@@ -92,7 +92,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.file.".profile".text = concatStringsSep "\n" ([
+    home.file.".profile".source = mkForce (pkgs.writeScript "profile" (concatStringsSep "\n" ([
 ''
 ${cfg.extraLinesPrepend}
 ''
@@ -140,7 +140,7 @@ fi
 ''
 ${cfg.extraLines}
 ''
-    ]);
+    ])));
 
     home.file = {
       ".profile_ssh_logout" = mkIf (cfg.enable && cfg.ssh.enable && cfg.ssh.logoutHooks != []) {
