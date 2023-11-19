@@ -1,4 +1,4 @@
-{ pkgs, lib ? pkgs.lib, home-manager, config, ... }:
+{ pkgs, oldpkgs, lib ? pkgs.lib, home-manager, config, ... }:
 
 {
   imports = [
@@ -9,6 +9,7 @@
   home.homeDirectory = "/home/me";
 
   home.packages = [
+    # oldpkgs.somepackage
     pkgs.yubikey-manager
     pkgs.nixos-anywhere
     pkgs.nixos-rebuild

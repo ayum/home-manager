@@ -1,4 +1,4 @@
-{ pkgs, lib ? pkgs.lib, home-manager, config, ... }:
+{ pkgs, oldpkgs, lib ? pkgs.lib, home-manager, config, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
