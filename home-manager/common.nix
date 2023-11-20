@@ -274,6 +274,20 @@
     };
   };
 
+  programs.ssh = {
+    enable = lib.mkDefault true;
+    includes = [
+      "config.d/*"
+    ];
+    matchBlocks = {
+      "github.com github gh" = {
+          hostname = "github.com";
+          user = "git";
+          identitiesOnly = false;
+      };
+    };
+  };
+
   services.ssh-agent.enable = lib.mkDefault false;
   services.gpg-agent = {
     enable = lib.mkDefault false;
