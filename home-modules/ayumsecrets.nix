@@ -24,7 +24,7 @@ let
       };
     };
   });
-  secretsTargetDir = if cfg.enablePlaintextOnRest then "${config.home.homeDirectory}" else "/run/user/$userid/aym/secrets";
+  secretsTargetDir = if cfg.enablePlaintextOnRest then "${config.home.homeDirectory}" else "/run/user/$userid/ayum/secrets";
   secretsScript = (pkgs.writeShellScriptBin "ayum-secrets.sh" ''
 set -e
 userid=$(${pkgs.coreutils}/bin/id -ru)
