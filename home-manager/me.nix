@@ -61,24 +61,22 @@
   programs.ssh = {
     enable = true;
     matchBlocks = {
-      "*sh.*" = {
-        extraOptions = {
-          RemoteCommand = ''ayum_ssh_tmpfile=$(${pkgs.coreutils}/bin/mktemp); echo "%h" >$ayum_ssh_tmpfile; IFS="." read ayum_ssh_sh remaining <$ayum_ssh_tmpfile; exec $ayum_ssh_sh'';
-          RequestTTY = "force";
-        };
-      };
     };
     forwardAgent = true;
     controlMaster = "auto";
-    controlPersist = "yes";
+    controlPersist = "no";
+    controlPath = " ~/.ssh/master-%r@%h:%p";
     extraConfig = ''
-Host *
+Match Host "!*.ayum.ru,*.*"
+    Hostname %h
+Match Host "!*.ayum.ru,*"
     Hostname %h.ayum.ru
+Match Host *.ayum.ru
     User root
     IdentitiesOnly no
     LocalCommand gpgconf --launch gpg-agent
-Match Host *.ayum.ru
     VerifyHostKeyDNS yes
+    RequestTTY yes
     RemoteForward /root/.gnupg/S.gpg-agent /run/user/%i/gnupg/S.gpg-agent.extra
     RemoteForward /root/.gnupg/S.gpg-agent.ssh /run/user/%i/gnupg/S.gpg-agent.ssh
 Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
