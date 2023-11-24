@@ -26,7 +26,7 @@
         login-shell = "yes";
       };
       csd = {
-        preferred = "none";
+        preferred = "server";
       };
       mouse = {
         alternate-scroll-mode = "yes";
