@@ -38,6 +38,7 @@
         modules = [
           ./home-manager/root.nix
           ./home-manager/mail.nix
+          ./home-manager/cachix.nix
           homeModules.ayumprofile
           homeModules.ayumsecrets
         ];
@@ -80,6 +81,8 @@
               home-manager.extraSpecialArgs = { inherit inputs pkgs oldpkgs; }; # allows access to flake inputs in hm modules
               home-manager.users.root.imports = [
                 ./home-manager/root.nix
+                ./home-manager/mail.nix
+                ./home-manager/cachix.nix
                 homeModules.ayumprofile
                 homeModules.ayumsecrets
               ];
