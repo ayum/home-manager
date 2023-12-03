@@ -10,8 +10,15 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    plasma-manager = {
+      url = "github:pjones/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = { nixos, nixpkgs, np, disko, home-manager, ... } @ inputs:
@@ -61,6 +68,7 @@
 
         modules = [
           ./home-manager/me.nix
+          # ./home-manager/kdeplasma.nix
           homeModules.ayumprofile
           homeModules.ayumsecrets
         ];
