@@ -32,6 +32,7 @@
     pkgs.editorconfig-core-c
     pkgs.mc
     pkgs.tig
+    pkgs.git-filter-repo
     pkgs.curl
     pkgs.wget
     pkgs.htop
