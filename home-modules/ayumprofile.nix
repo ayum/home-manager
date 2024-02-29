@@ -112,7 +112,7 @@ else
     sshd|*/sshd) SESSION_TYPE=remote/ssh;;
   esac
 fi
-if [ $SESSION_TYPE = "remote/ssh" ]; then
+if [ "$SESSION_TYPE" = "remote/ssh" ]; then
   ssh_logout_script="${config.home.homeDirectory}/.profile_ssh_logout"
   trap -- 'test -f "${sshLogoutScript}" && . "${sshLogoutScript}"; test -f "${logoutScript}" && . "${logoutScript}"' EXIT
   test -f "${config.home.homeDirectory}/.profile_ssh" && . "${config.home.homeDirectory}/.profile_ssh"
