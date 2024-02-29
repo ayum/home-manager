@@ -60,6 +60,7 @@ for fin in $(cd "$secretsdir"; find ./ -name '*.gpg' -or -name '*.asc'); do
   f="''${fin%.*}"
   ayumdecrypt "$fin"
   ${(optionalString (cfg.enablePlaintextOnRest) "continue")}
+  test -e "$f" || ${pkgs.coreutils}/bin/mkdir -p "$(${pkgs.coreutils}/bin/dirname "$f")"
   if test -L "$f"; then
     path="$(${pkgs.coreutils}/bin/realpath -m "$f")"
     storepath="$(${pkgs.coreutils}/bin/realpath -m "$ayumsecretstargetdir/$f")"
