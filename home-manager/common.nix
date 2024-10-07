@@ -23,7 +23,6 @@
     pkgs.nodePackages_latest.bash-language-server
     pkgs.cmake-language-server
     pkgs.nodePackages_latest.vscode-json-languageserver
-    pkgs.rnix-lsp
     pkgs.yaml-language-server
     pkgs.zls
     pkgs.python311Packages.python-lsp-server
@@ -286,7 +285,7 @@
   services.ssh-agent.enable = lib.mkDefault false;
   services.gpg-agent = {
     enable = lib.mkDefault false;
-    pinentryFlavor = lib.mkDefault "tty";
+    pinentryPackage = lib.mkDefault pkgs.pinentry-tty;
   };
   programs.gpg = {
     enable = true;
