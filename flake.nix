@@ -7,7 +7,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     np.url = "github:nixos/nixpkgs/master";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
