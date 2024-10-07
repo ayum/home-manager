@@ -263,10 +263,10 @@
 
   programs.git = {
     enable = true;
-    userName = "~ayum";
-    userEmail = "ayum@users.noreply.github.com";
     aliases = {
       ci = "commit";
+      ce = "commit --allow-empty";
+      ca = "commit --amend";
       co = "checkout";
       br = "branch";
       st = "status";
@@ -276,6 +276,9 @@
       enable = true;
       background = "dark";
     };
+    includes = [
+      { path = "user.inc"; }
+    ];
   };
 
   programs.ssh = {

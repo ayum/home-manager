@@ -44,6 +44,7 @@
 
         modules = [
           ./home-manager/root.nix
+          ./home-manager/git-ayum.nix
           ./home-manager/mail.nix
           ./home-manager/cachix.nix
           homeModules.ayumprofile
@@ -68,6 +69,7 @@
 
         modules = [
           ./home-manager/me.nix
+          ./home-manager/git-ayum.nix
           # ./home-manager/kdeplasma.nix
           homeModules.ayumprofile
           homeModules.ayumsecrets
