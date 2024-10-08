@@ -61,6 +61,18 @@
     enable = true;
   };
 
+  nix = {
+    enable = true;
+    package = lib.mkDefault pkgs.nix;
+    settings = {
+      use-xdg-base-directories = true;
+      extra-nix-path = "nixpkgs=flake:nixpkgs";
+      substituters = "https://cache.nixos.org https://ayum.cachix.org";
+      trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ayum.cachix.org-1:LuR7eVuXPJK7PwgbmnvNQOp2FQ9TLTToyOVON8fpk3E=";
+      experimental-features = ["ca-derivations" "nix-command" "flakes" "repl-flake"];
+    };
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
