@@ -63,7 +63,7 @@
 
   nix = {
     enable = true;
-    package = lib.mkDefault pkgs.nix;
+    package = lib.mkDefault pkgs.nixVersions.latest;
     settings = {
       use-xdg-base-directories = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
