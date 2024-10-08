@@ -153,6 +153,9 @@
     includes = [
       { path = "user.inc"; }
     ];
+    extraConfig = {
+      push = { autoSetupRemote = "true"; };
+    };
   };
 
   programs.ssh = {
