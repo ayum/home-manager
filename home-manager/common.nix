@@ -26,8 +26,9 @@
     pkgs.yaml-language-server
     pkgs.zls
     pkgs.python311Packages.python-lsp-server
-    pkgs.clang-tools_16
-    pkgs.kak-lsp
+    pkgs.clang-tools
+    pkgs.clang
+    pkgs.nodePackages_latest.nodejs
     pkgs.editorconfig-core-c
     pkgs.mc
     pkgs.tig
@@ -41,6 +42,7 @@
     pkgs.silver-searcher
     pkgs.fzf
     pkgs.python313
+    pkgs.just
   ];
 
   targets.genericLinux.enable = true;
@@ -118,133 +120,6 @@
       bind S-Left move-pane -t '.{left-of}'
       bind S-down move-pane -h -t '.{down-of}'
       set -g allow-passthrough on
-    '';
-  };
-
-  home.file."${config.xdg.configHome}/kak/colors".source =
-    let
-      kakoune-themes = pkgs.fetchFromGitHub {
-        owner = "anhsirk0";
-        repo = "kakoune-themes";
-        rev = "910a3fd7196f360c66e8cf5608870a98483f2a6d";
-        hash = "sha256-mqVMdfgZW22qGfWuVNru/yRdKIlbWk/iG6iuQI2T+4M=";
-      };
-    in "${kakoune-themes}/colors";
-  programs.kakoune = {
-    enable = true;
-    defaultEditor = true;
-    plugins = [
-      pkgs.kakounePlugins.kak-fzf
-      pkgs.kakounePlugins.kak-byline
-      pkgs.kakounePlugins.kakoune-registers
-      pkgs.kakounePlugins.smarttab-kak
-    ];
-    config = {
-      hooks = [
-        {
-          name = "BufOpenFile";
-          option = ".*";
-          commands = "editorconfig-load";
-        }
-        {
-          name = "BufNewFile";
-          option = ".*";
-          commands = "editorconfig-load";
-        }
-        {
-          name = "ModuleLoaded";
-          option = "tmux";
-          commands = "alias global terminal tmux-terminal-vertical";
-        }
-        {
-          name = "RegisterModified";
-          option = "/";
-          commands = ''add-highlighter -override global/search regex "%reg{/}" 0:CurSearch'';
-        }
-        {
-          name = "BufWritePre";
-          option = ".*";
-          commands = ''try %{ execute-keys -draft \%s\h+$<ret>d }'';
-        }
-        {
-          name = "FocusOut";
-          option = ".*";
-          commands = "try %{ write }";
-        }
-        {
-          name = "ModeChange";
-          option = ".*:insert:.*";
-          commands = "try %{ write }";
-        }
-        {
-          name = "NormalIdle";
-          option = ".*";
-          commands = "try %{ write }";
-        }
-        {
-          name = "BufCreate";
-          option = ".*";
-          commands = ''
-            editorconfig-load
-            autoconfigtab
-          '';
-        }
-      ];
-      keyMappings = [
-        {
-          key = "l";
-          mode = "user";
-          docstring = "lsp mode";
-          effect = ":enter-user-mode lsp<ret>";
-        }
-        {
-          key = "p";
-          mode = "user";
-          docstring = "fzf mode";
-          effect = ":fzf-mode<ret>";
-        }
-        {
-          key = "r";
-          mode = "user";
-          docstring = "registers view";
-          effect = ":info-registers<ret>";
-        }
-        {
-          key = "<a-i>";
-          mode = "prompt";
-          effect = "(?i)";
-        }
-        {
-          key = ".";
-          mode = "user";
-          docstring = "resource kakrc";
-          effect = '':source "%val{config}/kakrc"<ret>'';
-        }
-      ];
-      colorScheme = "mygruvbox";
-    };
-    extraConfig = ''
-
-      declare-option -hidden bool init_done
-
-      map global normal '#' ':comment-line<ret>'
-      add-highlighter -override global/ show-whitespaces
-      add-highlighter -override global/ show-matching
-      add-highlighter -override global/ number-lines -hlcursor
-      add-highlighter -override global/ regex \h+$ 0:Error
-      set-face global CurSearch +u
-
-      require-module "byline"
-
-      eval %sh{
-        $kak_opt_init_done && exit
-        kak-lsp --kakoune -s $kak_session
-      }
-      try %{ lsp-enable }
-
-      try %{ source "%val{config}/unmanaged.kak" } catch %{}
-
-      set-option global init_done true
     '';
   };
 
