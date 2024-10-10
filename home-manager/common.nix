@@ -150,11 +150,12 @@
       a   = "add";
       aa  = "add --all";
       p   = "push";
-      pf  = "push --forse";
+      pf  = "push --force";
       k   = "checkout";
       b   = "branch";
       s   = "status";
-      r   = "rev-parse";
+      v   = "rev-parse";
+      q   = ''!f() { subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; if [[ $# == 0 ]]; then git rebase --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; else git rebase --autosquash "''$@"; fi }; f'';
     };
     difftastic = {
       enable = true;
