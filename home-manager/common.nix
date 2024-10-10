@@ -138,13 +138,23 @@
   programs.git = {
     enable = true;
     aliases = {
-      ci = "commit";
-      ce = "commit --allow-empty";
-      ca = "commit --amend";
-      co = "checkout";
-      br = "branch";
-      st = "status";
-      rp = "rev-parse";
+      c   = "commit";
+      ce  = "commit --allow-empty";
+      cm  = "commit --amend";
+      ca  = "commit --all";
+      cg  = ''!f() { lastarg="''${@: -1}"; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# == 0 ]] && set -- ""; git commit "''${@: 1:-1}" "''$lastarg" --message "''${message:-Fix from $(git rev-parse --abbrev-ref HEAD)}"; }; f'';
+      cag = ''!f() { git cg --all "''$@"; }; f'';
+      acg = ''!f() { git add --all && git cg "''$@"; }; f'';
+      cf  = ''!f() { git commit --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
+      caf = ''!f() { git commit --all --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
+      a   = "add";
+      aa  = "add --all";
+      p   = "push";
+      pf  = "push --forse";
+      k   = "checkout";
+      b   = "branch";
+      s   = "status";
+      r   = "rev-parse";
     };
     difftastic = {
       enable = true;
