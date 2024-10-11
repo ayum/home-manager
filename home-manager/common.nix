@@ -152,10 +152,26 @@
       p   = "push";
       pf  = "push --force";
       k   = "checkout";
+      kb  = "checkout --branch";
       b   = "branch";
+      bf  = "branch --force";
+      ba  = "branch --all";
+      bl  = "branch --list";
+      bal = "branch --all --list";
+      bla = "bal";
+      brl = "branch --remotes --list";
+      blr = "brl";
+      w   = "switch";
+      l   = "log";
       s   = "status";
       v   = "rev-parse";
-      q   = ''!f() { subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; if [[ $# == 0 ]]; then git rebase --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; else git rebase --autosquash "''$@"; fi }; f'';
+      t   = "stash";
+      r   = "remote";
+      e   = "reset";
+      es  = "reset --soft";
+      eh  = "reset --hard";
+      h   = "show";
+      q   = ''!f() { subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; if [[ ''$# == 0 ]]; then git rebase --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; else git rebase --autosquash "''$@"; fi }; f'';
     };
     difftastic = {
       enable = true;
