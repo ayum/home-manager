@@ -33,6 +33,7 @@
     pkgs.mc
     pkgs.tig
     pkgs.git-filter-repo
+    pkgs.git-subrepo
     pkgs.curl
     pkgs.wget
     pkgs.htop
