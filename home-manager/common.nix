@@ -96,16 +96,6 @@
     initExtra = ''
       unsetopt share_history
       setopt inc_append_history
-
-      function ka () {
-        kak -clear;
-        session=$(kak -l | head -1);
-        if test -z $session; then
-          kak -s default "$@"
-        else
-          kak -c $session "$@"
-        fi
-      }
     '';
     profileExtra = ''
       emulate sh -c '. ~/.profile'
@@ -140,18 +130,21 @@
     enable = true;
     aliases = {
       c   = "commit";
+      cg  = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" "''$lastarg" --message "''${message:-Fix from $(git rev-parse --abbrev-ref HEAD)}"; }; f'';
       ce  = "commit --allow-empty";
+      ceg = ''!f() { : git commit; git cg --allow-empty "''$@"; }; f'';
       cm  = "commit --amend";
-      ca  = "commit --all";
-      cg  = ''!f() { lastarg="''${@: -1}"; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# == 0 ]] && set -- ""; git commit "''${@: 1:-1}" "''$lastarg" --message "''${message:-Fix from $(git rev-parse --abbrev-ref HEAD)}"; }; f'';
-      cag = ''!f() { git cg --all "''$@"; }; f'';
-      acg = ''!f() { git add --all && git cg "''$@"; }; f'';
-      cf  = ''!f() { git commit --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
-      caf = ''!f() { git commit --all --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
+      cf  = ''!f() { : git commit; git commit --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
       a   = "add";
       aa  = "add --all";
+      ac  = ''!f() { : git commit; git add --all && git commit "''$@"; }; f'';
+      acm = ''!f() { : git commit; git add --all && git commit --amend "''$@"; }; f'';
+      acg = ''!f() { : git commit; git add --all && git cg "''$@"; }; f'';
+      acf = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git add --all && git commit "''${@:1:''$#-1}" "''$lastarg" --fixup "''${commitish:-HEAD}"; }; f'';
       p   = "push";
       pf  = "push --force";
+      f   = "fetch";
+      u   = "pull";
       k   = "checkout";
       kb  = "checkout --branch";
       b   = "branch";
@@ -162,17 +155,24 @@
       bla = "bal";
       brl = "branch --remotes --list";
       blr = "brl";
+      bd  = "branch --delete";
+      bm  = "branch --merged";
+      bdm = ''!f() { : git branch; main="''$(git xmain)"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git branch --merged "''${commitish:-$main}" | sed "s/^[*[:space:]]*//g" | grep -v "''$main" | grep ".*-.*" | xargs -I% git branch "''${@:1:''$#-1}" "''$lastarg" --delete "%"; }; f'';
       w   = "switch";
       l   = "log";
       s   = "status";
       v   = "rev-parse";
       t   = "stash";
-      r   = "remote";
+      o   = "remote";
       e   = "reset";
       es  = "reset --soft";
       eh  = "reset --hard";
       h   = "show";
-      q   = ''!f() { subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; if [[ ''$# == 0 ]]; then git rebase --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; else git rebase --autosquash "''$@"; fi }; f'';
+      m   = "merge";
+      r   = "rebase";
+      rq  = ''!f() { : git rebase; subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git rebase "''${@:1:''$#-1}" "''$lastarg" --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; }; f'';
+      xdang = ''!git fsck --lost-found --name-objects --no-reflogs | grep "dangling commit" | sed -e "s@dangling commit @@" | xargs git show -s --format="%ct %H %cd %s" | sort -r | sed -e "s@^\\w*\\s*@@" | less -F'';
+      xmain = ''!mainbranch="''$(git rev-parse --abbrev-ref origin/HEAD)"; echo ''${mainbranch#*/}'';
     };
     difftastic = {
       enable = true;
@@ -183,6 +183,7 @@
     ];
     extraConfig = {
       push = { autoSetupRemote = "true"; };
+      pull = { ff = "only"; };
     };
   };
 
