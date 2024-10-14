@@ -130,7 +130,7 @@
     enable = true;
     aliases = {
       c   = "commit";
-      cg  = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" "''$lastarg" --message "''${message:-Fix from $(git rev-parse --abbrev-ref HEAD)}"; }; f'';
+      cg  = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" ''$lastarg --message "''${message:-Fix from $(git rev-parse --quiet --verify --abbrev-ref HEAD)}"; }; f'';
       ce  = "commit --allow-empty";
       ceg = ''!f() { : git commit; git cg --allow-empty "''$@"; }; f'';
       cm  = "commit --amend";
@@ -140,7 +140,7 @@
       ac  = ''!f() { : git commit; git add --all && git commit "''$@"; }; f'';
       acm = ''!f() { : git commit; git add --all && git commit --amend "''$@"; }; f'';
       acg = ''!f() { : git commit; git add --all && git cg "''$@"; }; f'';
-      acf = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git add --all && git commit "''${@:1:''$#-1}" "''$lastarg" --fixup "''${commitish:-HEAD}"; }; f'';
+      acf = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git add --all && git commit "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       p   = "push";
       pf  = "push --force";
       f   = "fetch";
@@ -157,7 +157,7 @@
       blr = "brl";
       bd  = "branch --delete";
       bm  = "branch --merged";
-      bdm = ''!f() { : git branch; main="''$(git xmain)"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git branch --merged "''${commitish:-$main}" | sed "s/^[*[:space:]]*//g" | grep -v "''$main" | grep ".*-.*" | xargs -I% git branch "''${@:1:''$#-1}" "''$lastarg" --delete "%"; }; f'';
+      bdm = ''!f() { : git branch; main="''$(git xmain)"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git branch --merged "''${commitish:-$main}" | sed "s/^[*[:space:]]*//g" | grep -v "''$main" | grep ".*-.*" | xargs -I% git branch "''${@:1:''$#-1}" ''$lastarg --delete "%"; }; f'';
       w   = "switch";
       l   = "log";
       s   = "status";
@@ -170,7 +170,7 @@
       h   = "show";
       m   = "merge";
       r   = "rebase";
-      rq  = ''!f() { : git rebase; subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git rebase "''${@:1:''$#-1}" "''$lastarg" --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; }; f'';
+      rq  = ''!f() { : git rebase; subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git rebase "''${@:1:''$#-1}" ''$lastarg --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; }; f'';
       xdang = ''!git fsck --lost-found --name-objects --no-reflogs | grep "dangling commit" | sed -e "s@dangling commit @@" | xargs git show -s --format="%ct %H %cd %s" | sort -r | sed -e "s@^\\w*\\s*@@" | less -F'';
       xmain = ''!mainbranch="''$(git rev-parse --abbrev-ref origin/HEAD)"; echo ''${mainbranch#*/}'';
     };
