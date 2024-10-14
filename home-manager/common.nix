@@ -187,6 +187,20 @@
     };
   };
 
+  programs.helix = {
+    enable = true;
+    defaultEditor = true;
+    settings = {
+      theme = "gruvbox";
+      editor = {
+#        lsp.display-messages = true;
+      };
+      keys.normal = {
+#        ret = ["move_line_down" "goto_first_nonwhitespace"];
+      };
+    };
+  };
+
   programs.ssh = {
     enable = lib.mkDefault true;
     includes = [
