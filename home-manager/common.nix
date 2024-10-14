@@ -144,7 +144,12 @@
       p   = "push";
       pf  = "push --force";
       f   = "fetch";
+      fa  = "fetch --all";
+      fe  = ''!f() { : git reset; upstream="''$(git rev-parse --quiet --verify --abbrev-ref --symbolic-full-name HEAD@{u})"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; commitish="''${commitish:-$upstream}"; [[ "''$commitish" == */* ]] && remote="''${commitish%%/*}"; [[ "''$commitish" != */* ]] && remote="--all"; git fetch "''${remote}" && git reset "''${@:1:''$#-1}" ''$lastarg "''$commitish"; }; f'';
       u   = "pull";
+      ut  = "pull --autostash";
+      utr = "pull --autostash --rebase";
+      utm = "pull --autostash --merge";
       k   = "checkout";
       kb  = "checkout --branch";
       b   = "branch";
@@ -159,8 +164,15 @@
       bm  = "branch --merged";
       bdm = ''!f() { : git branch; main="''$(git xmain)"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git branch --merged "''${commitish:-$main}" | sed "s/^[*[:space:]]*//g" | grep -v "''$main" | grep ".*-.*" | xargs -I% git branch "''${@:1:''$#-1}" ''$lastarg --delete "%"; }; f'';
       w   = "switch";
+      bw  = "switch -c";
       l   = "log";
       s   = "status";
+      n   = "clean";
+      nf  = "clean --force";
+      nn  = "clean --dry-run";
+      nd  = "clean -d";
+      ndn = "clean -d --dry-run";
+      ndf = "clean -d --force";
       v   = "rev-parse";
       t   = "stash";
       o   = "remote";
