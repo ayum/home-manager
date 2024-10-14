@@ -180,6 +180,7 @@
       es  = "reset --soft";
       eh  = "reset --hard";
       h   = "show";
+      d   = "diff";
       m   = "merge";
       r   = "rebase";
       rq  = ''!f() { : git rebase; subj="''$(git log -1 --format=%s)"; subj="''${subj##*[Ff][Ii][Xx][Uu][Pp]! }"; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git rebase "''${@:1:''$#-1}" ''$lastarg --autosquash ''$(git log -1 --format=%H --grep="^''${subj}$")^; }; f'';
