@@ -196,6 +196,8 @@
     extraConfig = {
       push = { autoSetupRemote = "true"; };
       pull = { ff = "only"; };
+      advice = { diverging = "false"; };
+      init = { defaultBranch = "master"; };
     };
   };
 
