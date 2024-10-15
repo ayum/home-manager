@@ -208,18 +208,35 @@
     };
   };
 
-  programs.helix = {
+  programs.neovim = {
     enable = true;
     defaultEditor = true;
-    settings = {
-      theme = "gruvbox";
-      editor = {
-#        lsp.display-messages = true;
-      };
-      keys.normal = {
-#        ret = ["move_line_down" "goto_first_nonwhitespace"];
-      };
-    };
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    extraPackages = [ pkgs.ripgrep pkgs.fd ];
+    plugins = let
+      nvim-treesitter-with-plugins = pkgs.vimPlugins.nvim-treesitter.withPlugins (treesitter-plugins:
+        with treesitter-plugins; [ bash c cpp lua nix python zig odin pascal markdown make vim java javascript typescript udev toml yaml ssh_config sql scheme rust ruby regex passwd objdump ninja nim meson linkerscript latex kconfig json json5 ini html css haskell groovy gpg go gitignore gitcommit git_rebase gitattributes git_config ebnf dockerfile diff csv cmake awk ]);
+    in with pkgs.vimPlugins; [
+      nvim-lspconfig
+      nvim-treesitter-with-plugins
+      plenary-nvim
+      gruvbox-material
+      mini-nvim
+      telescope-nvim
+      telescope-file-browser-nvim
+    ];
+    extraLuaConfig = ''
+      local telescope_builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>ff', telescope_builtin.find_files, { desc = 'Telescope find files' })
+      vim.keymap.set('n', '<leader>fg', telescope_builtin.live_grep, { desc = 'Telescope live grep' })
+      vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { desc = 'Telescope buffers' })
+      vim.keymap.set('n', '<leader>fs', telescope_builtin.grep_string, { desc = 'Telescope grep string' })
+      vim.keymap.set('n', '<leader>fe', function()
+	require("telescope").extensions.file_browser.file_browser()
+      end, { desc = 'Telescope file browser' })
+    '';
   };
 
   programs.ssh = {
