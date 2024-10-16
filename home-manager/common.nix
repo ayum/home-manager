@@ -216,20 +216,48 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    extraPackages = [ pkgs.ripgrep pkgs.fd ];
+    extraPackages = [
+      pkgs.ripgrep pkgs.fd
+      pkgs.powerline-symbols pkgs.font-awesome pkgs.material-design-icons pkgs.material-icons pkgs.weather-icons
+      (pkgs.nerdfonts.override {
+        fonts = [
+          "NerdFontsSymbolsOnly"
+        ];
+      })
+    ];
     plugins = let
       nvim-treesitter-with-plugins = pkgs.vimPlugins.nvim-treesitter.withPlugins (treesitter-plugins:
         with treesitter-plugins; [ bash c cpp lua nix python zig odin pascal markdown make vim java javascript typescript udev toml yaml ssh_config sql scheme rust ruby regex passwd objdump ninja nim meson linkerscript latex kconfig json json5 ini html css haskell groovy gpg go gitignore gitcommit git_rebase gitattributes git_config ebnf dockerfile diff csv cmake awk ]);
     in with pkgs.vimPlugins; [
+      gruvbox-material
+      vim-devicons
+      plenary-nvim
       nvim-lspconfig
       nvim-treesitter-with-plugins
-      plenary-nvim
-      gruvbox-material
       mini-nvim
+      mini-completion
+      mini-starter
+      mini-icons
+      mini-statusline
+      mini-git
+      mini-diff
+      mini-cursorword
+      mini-comment
+      mini-jump2d
       telescope-nvim
       telescope-file-browser-nvim
     ];
     extraLuaConfig = ''
+      require('mini.completion').setup()
+      require('mini.starter').setup()
+      require('mini.icons').setup()
+      require('mini.statusline').setup()
+      require('mini.git').setup()
+      require('mini.diff').setup()
+      require('mini.cursorword').setup()
+      require('mini.comment').setup()
+      require('mini.jump2d').setup()
+
       require('telescope').setup{
         pickers = {
           buffers = {
