@@ -8,6 +8,20 @@
   home.username = "me";
   home.homeDirectory = "/home/me";
 
+  home.language = {
+    base = "ru_RU.UTF-8";
+    numeric ="ru_RU.UTF-8";
+    time ="ru_RU.UTF-8";
+    collate ="ru_RU.UTF-8";
+    monetary ="ru_RU.UTF-8";
+    messages ="ru_RU.UTF-8";
+    paper ="ru_RU.UTF-8";
+    name ="ru_RU.UTF-8";
+    address ="ru_RU.UTF-8";
+    telephone ="ru_RU.UTF-8";
+    measurement ="ru_RU.UTF-8";
+  };
+
   home.packages = [
     # oldpkgs.somepackage
     pkgs.yubikey-manager

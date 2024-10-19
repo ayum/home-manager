@@ -3,19 +3,19 @@
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.language = {
-    base = "ru_RU.UTF-8";
+  home.language = lib.mkDefault {
+    base = "C.UTF-8";
     ctype ="C.UTF-8";
-    numeric ="ru_RU.UTF-8";
-    time ="ru_RU.UTF-8";
-    collate ="ru_RU.UTF-8";
-    monetary ="ru_RU.UTF-8";
-    messages ="ru_RU.UTF-8";
-    paper ="ru_RU.UTF-8";
-    name ="ru_RU.UTF-8";
-    address ="ru_RU.UTF-8";
-    telephone ="ru_RU.UTF-8";
-    measurement ="ru_RU.UTF-8";
+    numeric ="C.UTF-8";
+    time ="C.UTF-8";
+    collate ="C.UTF-8";
+    monetary ="C.UTF-8";
+    messages ="C.UTF-8";
+    paper ="C.UTF-8";
+    name ="C.UTF-8";
+    address ="C.UTF-8";
+    telephone ="C.UTF-8";
+    measurement ="C.UTF-8";
   };
 
   # Packages that should be installed to the user profile.
