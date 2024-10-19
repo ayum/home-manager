@@ -27,7 +27,6 @@
     pkgs.zls
     pkgs.python311Packages.python-lsp-server
     pkgs.clang-tools
-    pkgs.clang
     pkgs.nodePackages_latest.nodejs
     pkgs.editorconfig-core-c
     pkgs.mc
