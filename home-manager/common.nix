@@ -114,7 +114,7 @@
     terminal = "tmux-256color";
     escapeTime = 25;
     clock24 = true;
-    aggressiveResize = true;
+    aggressiveResize = false;
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
       bind S-Up move-pane -h -t '.{up-of}'
