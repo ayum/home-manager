@@ -139,10 +139,12 @@
       a      = "add";
       aa     = "add --all";
       ac     = ''!f() { : git commit; git add --all && git commit "''$@"; }; f'';
+      acm    = ''!f() { : git commit; git add --all && git commit --amend "''$@"; }; f'';
       acmn   = ''!f() { : git commit; git add --all && git commit --amend --no-edit "''$@"; }; f'';
       acg    = ''!f() { : git commit; git add --all && git cg "''$@"; }; f'';
       acf    = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git add --all && git commit "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       acp    = ''!f() { : git push; git ac; git push "''$@"; }; f'';
+      acmp   = ''!f() { : git push; git acm; git push "''$@"; }; f'';
       acmnp  = ''!f() { : git push; git acmn; git push "''$@"; }; f'';
       acmnpf = ''!f() { : git push; git acmn; git push --force "''$@"; }; f'';
       acfp   = ''!f() { : git push; git acf; git push "''$@"; }; f'';
