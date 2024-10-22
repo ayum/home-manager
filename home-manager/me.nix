@@ -81,19 +81,24 @@
     controlPersist = "no";
     controlPath = " ~/.ssh/master-%r@%h:%p";
     extraConfig = ''
-Match Host "!*.ayum.ru,*.*"
-    Hostname %h
-Match Host "!*.ayum.ru,*"
-    Hostname %h.ayum.ru
-Match Host *.ayum.ru
-    User root
+Host *
     IdentitiesOnly no
-    LocalCommand gpgconf --launch gpg-agent
+Match host="!*.ayum.ru,*.*"
+    Hostname %h
+Match host="!*.ayum.ru,*"
+    Hostname %h.ayum.ru
+Match host=*.ayum.ru
+    User root
     VerifyHostKeyDNS yes
+    Tag dev
+Match tagged=dev
+    LocalCommand gpgconf --launch gpg-agent
     RequestTTY yes
+Match tagged=dev !exec="[ -e ~/.ssh/master-%r@%h:%p ]"
     RemoteForward /root/.gnupg/S.gpg-agent /run/user/%i/gnupg/S.gpg-agent.extra
     RemoteForward /root/.gnupg/S.gpg-agent.ssh /run/user/%i/gnupg/S.gpg-agent.ssh
-Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
+    RemoteCommand (gpg --list-keys >/dev/null 2>&1); (command -v socat >/dev/null && (socat -u OPEN:/dev/null UNIX-CONNECT:/root/.gnupg/S.gpg-agent 2>/dev/null || rm -f /root/.gnupg/S.gpg-agent; socat -u OPEN:/dev/null UNIX-CONNECT:/root/.gnupg/S.gpg-agent.ssh 2>/dev/null || rm -f /root/.gnupg/S.gpg-agent.ssh)); ent="''$(getent passwd %r)"; shell="''${ent##*:}"; exec ''$shell -l
+Match tagged=dev exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
 '';
   };
 
@@ -107,7 +112,6 @@ Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
         path = ".ssh/config.d/work";
         ciphertext = ''
 -----BEGIN PGP MESSAGE-----
-
 hF4Dspzg4We8e9wSAQdAmzV47eeGFehykHUqvQnJOwl2Yx0usg+PfjbEbQEjAUQw
 qYeb4P91iD+sKIV+0lHb3eDDzCLJ5KXfFD7YrCqtA7woKCPBD15qn7UB0cw8fdDT
 0sBdASviFxsc2mbZqE4OSfQn+ciHjINvp++KYBJzV4LSAIymoRxqC1fp+rqrbPPi

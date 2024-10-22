@@ -119,7 +119,7 @@ in
         logoutHooks = [''
           userid=$(${pkgs.coreutils}/bin/id -ru)
           ${pkgs.socat}/bin/socat -u OPEN:/dev/null UNIX-CONNECT:${config.home.homeDirectory}/.gnupg/S.gpg-agent 2>/dev/null || ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.gnupg/S.gpg-agent"
-          ${pkgs.socat}/bin/socat -u OPEN:/dev/null UNIX-CONNECT:${config.home.homeDirectory}/.gnupg/S.gpg-agent 2>/dev/null || ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.gnupg/S.gpg-agent.ssh"
+          ${pkgs.socat}/bin/socat -u OPEN:/dev/null UNIX-CONNECT:${config.home.homeDirectory}/.gnupg/S.gpg-agent.ssh 2>/dev/null || ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.gnupg/S.gpg-agent.ssh"
           test -f /run/user/$userid/gnupg && ${pkgs.coreutils}/bin/rm -f /run/user/$userid/gnupg;
         ''];
       };
