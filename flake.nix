@@ -5,7 +5,7 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixos.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    np.url = "github:nixos/nixpkgs/master";
+    oldnixpkgs.url = "github:nixos/nixpkgs/release-24.05";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,14 +21,14 @@
     };
   };
 
-  outputs = { nixos, nixpkgs, np, disko, home-manager, ... } @ inputs:
+  outputs = { nixos, nixpkgs, oldnixpkgs, disko, home-manager, ... } @ inputs:
     let
       system = "x86_64-linux";
-      pkgs = import np {
+      pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      oldpkgs = import nixpkgs {
+      oldpkgs = import oldnixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
