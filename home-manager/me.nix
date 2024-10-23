@@ -112,15 +112,16 @@ Match tagged=dev exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
         path = ".ssh/config.d/work";
         ciphertext = ''
 -----BEGIN PGP MESSAGE-----
-hF4Dspzg4We8e9wSAQdAmzV47eeGFehykHUqvQnJOwl2Yx0usg+PfjbEbQEjAUQw
-qYeb4P91iD+sKIV+0lHb3eDDzCLJ5KXfFD7YrCqtA7woKCPBD15qn7UB0cw8fdDT
-0sBdASviFxsc2mbZqE4OSfQn+ciHjINvp++KYBJzV4LSAIymoRxqC1fp+rqrbPPi
-b1qn4SAI3Rhevhila2lweSk5BIXfVdQquVFxR3XNrQC18gO8mC+/ZYwjJSrBypaG
-Az7LL1ypyFS+XKy42Xfb1ba753Wvm5O5PS0q8X0goNVa4WZqtXqQ8Xjca2yDHduD
-UP/MYdyzye1rAvjXLYVwcfqivvcDMXNBpQ71/KGhVFXar3FNDTpbgRbpc4rP6hWO
-CnrQLmErmR/PfQAqgBMuVCiA/6WpRWp5sMZTQ1Bxc38jgXblMsFr2/MimcHMmn+A
-4xHfQ4mmUqKoM+ni9EzD/GXykiHos/9ixzDi7mjCN1XreJqQ6UDA96age0srGj6y
-=AQyr
+
+hF4Dspzg4We8e9wSAQdA4GX7UMBXX8qk/OKGGH431ojPKMo9j9zXRxB3Qmvs6jUw
+5bsxnXhIiJhM0vJEb0KpO6ZIF5OjlXAeC4bozRX9/WxGNrFGUbvlCQod/wkm9uH7
+0sBbAZiIzYF3zVahI9h1blMNspPlqUYZpEQPGJ6b+ND2+7tFk6Fm7RunGoPgMO8a
+0qBSXk/Lx6Isc0fDha9vKFPGrPTfNhYXtxmKTt2sdPLLtDlpaI7igqn90DP8IK4o
+gzHHnOhN9QyDtz0QlK4Z7aowIibxWvfWEaFSdlAwKvoR2fP3cjmCpTk+2hFK7eTQ
+QhmVqEjx683u5AXlvPJJKtpHzaAJBR7aeRM7sxoRunRILedDtuBucLdnLGNKVgTI
+1ibe1xeR5sbt/hKkNb4TAvZiX2+wU8qfMDnCDLcm89PDXpswvLqyzAPQd0CCQObY
+3nzpGpv7wCWSCQ5VTD2VEFGL6gEooDi9/hwztWh7LjpMPoMot2VOD0XfPZK0MA==
+=nkPG
 -----END PGP MESSAGE-----
         '';
       }
