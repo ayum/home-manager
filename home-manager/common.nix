@@ -130,12 +130,17 @@
     enable = true;
     aliases = {
       c      = "commit";
+      ca     = "commit --all";
       cg     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" ''$lastarg --message "''${message:-Fix from $(git rev-parse --quiet --verify --abbrev-ref HEAD)}"; }; f'';
+      cag     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit --all "''${@:1:''$#-1}" ''$lastarg --message "''${message:-Fix from $(git rev-parse --quiet --verify --abbrev-ref HEAD)}"; }; f'';
       ce     = "commit --allow-empty";
       ceg    = ''!f() { : git commit; git cg --allow-empty "''$@"; }; f'';
       cm     = "commit --amend";
+      cam    = "commit --all --amend";
       cmn    = "commit --amend --no-edit";
-      cf     = ''!f() { : git commit; git commit --fixup ''${1-HEAD} "''${@: 2}"; }; f'';
+      camn   = "commit --all --amend --no-edit";
+      cf     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
+      caf    = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit --all "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       a      = "add";
       aa     = "add --all";
       ac     = ''!f() { : git commit; git add --all && git commit "''$@"; }; f'';
@@ -144,12 +149,19 @@
       acg    = ''!f() { : git commit; git add --all && git cg "''$@"; }; f'';
       acf    = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git add --all && git commit "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       acp    = ''!f() { : git push; git ac; git push "''$@"; }; f'';
+      cap    = ''!f() { : git push; git ca; git push "''$@"; }; f'';
       acmp   = ''!f() { : git push; git acm; git push "''$@"; }; f'';
+      camp   = ''!f() { : git push; git cam; git push "''$@"; }; f'';
       acmnp  = ''!f() { : git push; git acmn; git push "''$@"; }; f'';
+      camnp  = ''!f() { : git push; git camn; git push "''$@"; }; f'';
       acmnpf = ''!f() { : git push; git acmn; git push --force "''$@"; }; f'';
+      camnpf = ''!f() { : git push; git camn; git push --force "''$@"; }; f'';
       acfp   = ''!f() { : git push; git acf; git push "''$@"; }; f'';
+      cafp   = ''!f() { : git push; git caf; git push "''$@"; }; f'';
       acfpf  = ''!f() { : git push; git acf; git push --force "''$@"; }; f'';
+      cafpf  = ''!f() { : git push; git caf; git push --force "''$@"; }; f'';
       acpf   = ''!f() { : git push; git ac; git push --force "''$@"; }; f'';
+      capf   = ''!f() { : git push; git ca; git push --force "''$@"; }; f'';
       p      = "push";
       pf     = "push --force";
       f      = "fetch";
