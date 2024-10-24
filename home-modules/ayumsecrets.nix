@@ -31,7 +31,7 @@ userid=$(${pkgs.coreutils}/bin/id -ru)
 ayumsecretstargetdir="${secretsTargetDir}"
 secretsdir=${secretsDir}
 cleanup () { :; }
-trap '[ $? -eq 0 ] && { cleanup; exit 0; } || { cleanup; echo "Decryption failed for all or some secrets. Disconnecting"; exit 1; }' EXIT
+trap '[ $? -eq 0 ] && { cleanup; exit 0; } || { cleanup; echo "Decryption failed for all or some secrets.${(optionalString (cfg.enableExitOnFail) "Disconnecting")}"; exit 1; }' EXIT
 ${(optionalString (! cfg.enablePlaintextOnRest) ''
 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent 1>&2 2>/dev/null || :
 ${pkgs.gnupg}/bin/gpgconf --remove-socketdir 1>&2 2>/dev/null || :
@@ -81,7 +81,7 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Whether to enable secrets decryption on ssh login with gpg.
+          Whether to enable secrets decryption on login with gpg.
         '';
       };
       enablePlaintextOnRest = mkOption {
@@ -95,7 +95,14 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Wether decrypt on ssh login only or in regualr user profile.
+          Wether to decrypt on ssh login or regular user profile only.
+        '';
+      };
+      enableExitOnFail = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to exit login session if decryption failed.
         '';
       };
       secrets = mkOption {
@@ -109,12 +116,12 @@ in
     ayum.profile = {
       enable = true;
       loginHooks = [''
-          ${pkgs.dash}/bin/dash ${secretsScript}/bin/ayum-secrets.sh || exit 1
+          ${pkgs.dash}/bin/dash ${secretsScript}/bin/ayum-secrets.sh ${(optionalString (cfg.enableExitOnFail) "|| exit 1")}
       ''];
       ssh = mkIf (cfg.enableSsh) {
         enable = true;
         loginHooks = [''
-          ${pkgs.dash}/bin/dash ${secretsScript}/bin/ayum-secrets.sh || exit 1
+          ${pkgs.dash}/bin/dash ${secretsScript}/bin/ayum-secrets.sh ${(optionalString (cfg.enableExitOnFail) "|| exit 1")}
         ''];
         logoutHooks = [''
           userid=$(${pkgs.coreutils}/bin/id -ru)
