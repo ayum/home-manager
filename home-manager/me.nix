@@ -110,6 +110,7 @@ Match tagged=dev exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
     secrets = [
       {
         path = ".ssh/config.d/work";
+        mode = "600";
         ciphertext = ''
 -----BEGIN PGP MESSAGE-----
 

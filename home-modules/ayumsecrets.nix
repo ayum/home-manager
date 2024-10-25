@@ -22,6 +22,13 @@ let
           Text from `gpg --encrypt --armor plaintext.file`. Should start with -----BEGIN PGP MESSAGE-----.
         '';
       };
+      mode = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          If not empty chmod command with the mode is issued upon plaintext file in form `chmod ''$mode plaintext.file`. May be symbolic or numeric as well.
+        '';
+      };
     };
   });
   secretsTargetDir = if cfg.enablePlaintextOnRest then "${config.home.homeDirectory}" else "/run/user/$userid/ayum/secrets";
@@ -49,10 +56,12 @@ ayumdecrypt () {
   local fname="''${1%.*}"
   local f="$ayumsecretstargetdir/$fname"
   if test ! -e "$f" || test $(${pkgs.coreutils}/bin/stat -c %Y "$f") -eq 1; then
+    local mode="$(stat -L --format '%a' "$f" 2>/dev/null)"
     ${pkgs.coreutils}/bin/install -b -D /dev/null "$f"
     ${pkgs.coreutils}/bin/rm -f "$f"
-    printf "%s" "Decrypting ${config.home.homeDirectory}/$fname"
-    ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo " ok" || false
+    printf "%s " "Decrypting ${config.home.homeDirectory}/$fname"
+    ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo "ok" || false
+    if [ -n "$mode" ]; then ${pkgs.coreutils}/bin/chmod "$mode" "$f"; fi
     ${pkgs.coreutils}/bin/chmod +t "$f"
   fi
 }
@@ -140,7 +149,7 @@ in
           text = "${secret.ciphertext}";
           onChange = ''
             userid=$(${pkgs.coreutils}/bin/id -ru)
-            test -f "${secretsTargetDir}/${secretPath}" && ${pkgs.coreutils}/bin/touch -m --date=@1 "${secretsTargetDir}/${secretPath}"
+            test -f "${secretsTargetDir}/${secretPath}" && (${pkgs.coreutils}/bin/touch -m --date=@1 "${secretsTargetDir}/${secretPath}"; ${(optionalString (secret.mode != "") "chmod ${secret.mode} ''\"${secretsTargetDir}/${secretPath}''\";")} )
           '';
         };
       }
