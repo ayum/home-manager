@@ -33,7 +33,7 @@
     pkgs.tig
     pkgs.git-filter-repo
     pkgs.git-subrepo
-    pkgs.openssh
+    (pkgs.openssh_gssapi.override { withKerberos = true; })
     pkgs.curl
     pkgs.wget
     pkgs.htop

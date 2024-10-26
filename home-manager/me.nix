@@ -83,6 +83,7 @@
     extraConfig = ''
 Host *
     IdentitiesOnly no
+    GSSAPIAuthentication no
 Match host="!*.ayum.ru,*.*"
     Hostname %h
 Match host="!*.ayum.ru,*"
