@@ -134,11 +134,16 @@
       cg     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" ''$lastarg --message "''${message:-Fix from $(git rev-parse --quiet --verify --abbrev-ref HEAD)}"; }; f'';
       cag     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; message="''${lastarg}"; [[ "''$lastarg" == -* ]] && message=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit --all "''${@:1:''$#-1}" ''$lastarg --message "''${message:-Fix from $(git rev-parse --quiet --verify --abbrev-ref HEAD)}"; }; f'';
       ce     = "commit --allow-empty";
+      cem    = "commit --allow-empty --amend";
+      cemn   = "commit --allow-empty --amend --no-edit";
       ceg    = ''!f() { : git commit; git cg --allow-empty "''$@"; }; f'';
+      cemg    = ''!f() { : git commit; git cg --amend --allow-empty "''$@"; }; f'';
       cm     = "commit --amend";
       cam    = "commit --all --amend";
       cmn    = "commit --amend --no-edit";
       camn   = "commit --all --amend --no-edit";
+      cmpf   = ''!f() { : git push; git cm; git push --force "''$@"; }; f'';
+      cmnpf  = ''!f() { : git push; git cmn; git push --force "''$@"; }; f'';
       cf     = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       caf    = ''!f() { : git commit; lastarg="''${@:$#:1}"; [[ ''$# == 0 ]] && lastarg=""; commitish="''${lastarg}"; [[ "''$lastarg" == -* ]] && commitish=""; [[ "''$lastarg" != -* ]] && lastarg=""; [[ ''$# -le 1 ]] && set -- ""; git commit --all "''${@:1:''$#-1}" ''$lastarg --fixup "''${commitish:-HEAD}"; }; f'';
       a      = "add";
@@ -152,6 +157,8 @@
       cap    = ''!f() { : git push; git ca; git push "''$@"; }; f'';
       acmp   = ''!f() { : git push; git acm; git push "''$@"; }; f'';
       camp   = ''!f() { : git push; git cam; git push "''$@"; }; f'';
+      acmpf  = ''!f() { : git push; git acm; git push --force "''$@"; }; f'';
+      campf  = ''!f() { : git push; git cam; git push --force "''$@"; }; f'';
       acmnp  = ''!f() { : git push; git acmn; git push "''$@"; }; f'';
       camnp  = ''!f() { : git push; git camn; git push "''$@"; }; f'';
       acmnpf = ''!f() { : git push; git acmn; git push --force "''$@"; }; f'';
