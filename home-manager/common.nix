@@ -44,6 +44,7 @@
     pkgs.fzf
     pkgs.python313
     pkgs.just
+    pkgs.tshark
   ];
 
   targets.genericLinux.enable = true;
