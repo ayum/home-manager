@@ -84,6 +84,7 @@
 Host *
     IdentitiesOnly no
     GSSAPIAuthentication no
+Match exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
 Match host="!*.ayum.ru,*.*"
     Hostname %h
 Match host="!*.ayum.ru,*"
@@ -99,7 +100,6 @@ Match tagged=dev !exec="[ -e ~/.ssh/master-%r@%h:%p ]"
     RemoteForward /root/.gnupg/S.gpg-agent /run/user/%i/gnupg/S.gpg-agent.extra
     RemoteForward /root/.gnupg/S.gpg-agent.ssh /run/user/%i/gnupg/S.gpg-agent.ssh
     RemoteCommand (gpg --list-keys >/dev/null 2>&1); (command -v socat >/dev/null && (socat -u OPEN:/dev/null UNIX-CONNECT:/root/.gnupg/S.gpg-agent 2>/dev/null || rm -f /root/.gnupg/S.gpg-agent; socat -u OPEN:/dev/null UNIX-CONNECT:/root/.gnupg/S.gpg-agent.ssh 2>/dev/null || rm -f /root/.gnupg/S.gpg-agent.ssh)); ent="''$(getent passwd %r)"; shell="''${ent##*:}"; exec ''$shell -l
-Match tagged=dev exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
 '';
   };
 
