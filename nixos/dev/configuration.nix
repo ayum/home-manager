@@ -56,7 +56,6 @@
       experimental-features = [
         "nix-command"
         "flakes"
-        "repl-flake"
         "ca-derivations"
       ];
       # Deduplicate and optimize nix store
@@ -70,11 +69,14 @@
   # TODO: Set your hostname
   networking.hostName = "dev";
 
-  boot.loader.grub = {
-    # no need to set devices, disko will add all devices that have a EF02 partition to the list already
-    # devices = [ ];
-    efiSupport = true;
-    efiInstallAsRemovable = true;
+  boot = {
+    kernelPackages = pkgs.linux_latest;
+    loader.grub = {
+      # no need to set devices, disko will add all devices that have a EF02 partition to the list already
+      # devices = [ ];
+      efiSupport = true;
+      efiInstallAsRemovable = true;
+    };
   };
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
@@ -131,5 +133,5 @@
   ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.04";
 }
