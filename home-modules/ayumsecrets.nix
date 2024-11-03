@@ -62,6 +62,8 @@ ayumdecrypt () {
     printf "%s " "Decrypting ${config.home.homeDirectory}/$fname"
     ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo "ok" || false
     if [ -n "$mode" ]; then ${pkgs.coreutils}/bin/chmod "$mode" "$f"; fi
+    mode=$(${pkgs.gnused}/bin/sed -n 's/^Comment: mode=//gp' "$fin" | head -n1)
+    if [ -n "$mode" ]; then ${pkgs.coreutils}/bin/chmod "$mode" "$f"; fi 
     ${pkgs.coreutils}/bin/chmod +t "$f"
   fi
 }
@@ -146,7 +148,14 @@ in
         secretPath = stripHomedir secret.path;
       in {
         "${secretsDir}/${secretPath}.asc" = {
-          text = "${secret.ciphertext}";
+          text = let
+            asc = builtins.split "\n ?\n" "${secret.ciphertext}";
+          in
+            ''
+              ${builtins.head asc}${optionalString (secret.mode != "") "\nComment: mode=${secret.mode}"}
+
+              ${builtins.head (builtins.tail (builtins.tail asc))}
+          '';
           onChange = ''
             userid=$(${pkgs.coreutils}/bin/id -ru)
             test -f "${secretsTargetDir}/${secretPath}" && (${pkgs.coreutils}/bin/touch -m --date=@1 "${secretsTargetDir}/${secretPath}"; ${(optionalString (secret.mode != "") "chmod ${secret.mode} ''\"${secretsTargetDir}/${secretPath}''\";")} )
