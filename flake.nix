@@ -51,15 +51,15 @@
           homeModules.ayumsecrets
         ];
       };
-      homeConfigurations."user" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."tty" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit oldpkgs; };
 
         modules = [
           ./home-manager/common.nix
           {
-            home.username = "user";
-            home.homeDirectory = "/home/user";
+            home.username = "tty";
+            home.homeDirectory = "/home/tty";
           }
         ];
       };
