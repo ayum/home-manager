@@ -92,7 +92,10 @@ Match host="!*.ayum.ru,*"
 Match host=*.ayum.ru
     User root
     VerifyHostKeyDNS yes
+Match host="!_*,*.ayum.ru"
     Tag dev
+Match host=_*
+    ProxyCommand nc -q0 `H="%h"; H="''${H##*_}"; echo "''$H"` %p 2>/dev/null
 Match tagged=dev
     LocalCommand gpgconf --launch gpg-agent
     RequestTTY yes
