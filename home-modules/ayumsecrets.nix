@@ -158,7 +158,7 @@ in
           '';
           onChange = ''
             userid=$(${pkgs.coreutils}/bin/id -ru)
-            test -f "${secretsTargetDir}/${secretPath}" && (${pkgs.coreutils}/bin/touch -m --date=@1 "${secretsTargetDir}/${secretPath}"; ${(optionalString (secret.mode != "") "chmod ${secret.mode} ''\"${secretsTargetDir}/${secretPath}''\";")} )
+            test -f "${secretsTargetDir}/${secretPath}" && (${pkgs.coreutils}/bin/touch -m --date=@1 "${secretsTargetDir}/${secretPath}"; ${(optionalString (secret.mode != "") "chmod ${secret.mode} \"${secretsTargetDir}/${secretPath}\";")} )
           '';
         };
       }
