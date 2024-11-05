@@ -1,4 +1,4 @@
-{ pkgs, oldpkgs, lib ? pkgs.lib, home-manager, config, ... }:
+{ pkgs, inputs, oldpkgs, lib ? pkgs.lib, home-manager, config, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -26,7 +26,7 @@
     pkgs.nodePackages_latest.vscode-json-languageserver
     pkgs.yaml-language-server
     pkgs.zls
-    pkgs.python311Packages.python-lsp-server
+    pkgs.python312Packages.python-lsp-server
     pkgs.clang-tools
     pkgs.nodePackages_latest.nodejs
     pkgs.editorconfig-core-c
@@ -43,12 +43,17 @@
     pkgs.unzip
     pkgs.silver-searcher
     pkgs.fzf
-    pkgs.python313
+    pkgs.python312Full
     pkgs.just
     pkgs.tshark
+    pkgs.emacs
+    pkgs.emacsPackages.vterm
+    pkgs.nano
+    pkgs.source-code-pro
   ];
-
+  fonts.fontconfig.enable = true;
   targets.genericLinux.enable = true;
+  xdg.enable = true;
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -59,10 +64,6 @@
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.stateVersion = "24.11";
-
-  xdg = {
-    enable = true;
-  };
 
   nix = {
     enable = true;
@@ -79,12 +80,22 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  home.file."${config.xdg.configHome}/emacs" = {
+    recursive = true;
+    source = inputs.spacemacs;
+  };
+  home.file."${config.xdg.configHome}/spacemacs/init.el".source = ./spacemacs/init.el;
+  home.sessionVariables = {
+    SPACEMACSDIR = "${config.xdg.configHome}/spacemacs";
+    EDITOR = "nano";
+  };
+
   home.file."${config.xdg.configHome}/clangd/config.yaml".text = ''
     CompileFlags:
       Add: [--include-directory=/usr/include]
   '';
-  home.file."${config.xdg.stateHome}/bash/.keep".text = "";
 
+  home.file."${config.xdg.stateHome}/bash/.keep".text = "";
   programs.bash = {
     enable = true;
     historyFile = "${config.xdg.stateHome}/bash/history";

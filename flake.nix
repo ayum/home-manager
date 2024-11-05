@@ -19,6 +19,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    spacemacs = {
+      type = "github";
+      owner = "syl20bnr";
+      repo = "spacemacs";
+      flake = false;
+    };
   };
 
   outputs = { nixos, nixpkgs, oldnixpkgs, disko, home-manager, ... } @ inputs:
@@ -53,7 +59,7 @@
       };
       homeConfigurations."tty" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit oldpkgs; };
+        extraSpecialArgs = { inherit inputs oldpkgs; };
 
         modules = [
           ./home-manager/common.nix
@@ -65,7 +71,7 @@
       };
       homeConfigurations."me" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit oldpkgs; };
+        extraSpecialArgs = { inherit inputs oldpkgs; };
 
         modules = [
           ./home-manager/me.nix

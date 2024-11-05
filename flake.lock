@@ -119,7 +119,24 @@
         "nixos": "nixos",
         "nixpkgs": "nixpkgs",
         "oldnixpkgs": "oldnixpkgs",
-        "plasma-manager": "plasma-manager"
+        "plasma-manager": "plasma-manager",
+        "spacemacs": "spacemacs"
+      }
+    },
+    "spacemacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1730799954,
+        "narHash": "sha256-BaezCBSTBxw+tOl76NfaWpj2RHuNiUkhqywGgvrWqpU=",
+        "owner": "syl20bnr",
+        "repo": "spacemacs",
+        "rev": "60dcd8cf95f8d4b249c605d25bca2adb0dfd6318",
+        "type": "github"
+      },
+      "original": {
+        "owner": "syl20bnr",
+        "repo": "spacemacs",
+        "type": "github"
       }
     }
   },
