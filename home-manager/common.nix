@@ -17,6 +17,7 @@
     telephone ="C.UTF-8";
     measurement ="C.UTF-8";
   };
+  home.preferXdgDirectories = true;
 
   # Packages that should be installed to the user profile.
   home.packages = [
@@ -82,8 +83,12 @@
     CompileFlags:
       Add: [--include-directory=/usr/include]
   '';
+  home.file."${config.xdg.stateHome}/bash/.keep".text = "";
 
-  programs.bash.enable = true;
+  programs.bash = {
+    enable = true;
+    historyFile = "${config.xdg.stateHome}/bash/history";
+  };
   programs.zsh = {
     enable = true;
     oh-my-zsh = {
