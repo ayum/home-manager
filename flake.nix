@@ -46,7 +46,7 @@
       inherit homeModules;
       homeConfigurations."root" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit oldpkgs; };
+        extraSpecialArgs = { inherit inputs oldpkgs; };
 
         modules = [
           ./home-manager/root.nix
@@ -82,17 +82,18 @@
         ];
       };
       nixosConfigurations."dev" = let
-        hardwareConfiguration = ./nixos/hardware/generic-vps.nix;
+        hardwareConfiguration = ./nixos/hardware-vps.nix;
       in
         nixos.lib.nixosSystem {
           specialArgs = { inherit inputs hardwareConfiguration pkgs oldpkgs; };
           modules = [
             disko.nixosModules.disko
             # { disko.devices.disk.disk1.device = "/dev/vda"; }
-            ./nixos/dev/configuration.nix
+            ./nixos/dev.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true; # makes hm use nixos's pkgs value
+              home-manager.backupFileExtension = "backup";
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs pkgs oldpkgs; }; # allows access to flake inputs in hm modules
               home-manager.users.root.imports = [
@@ -106,12 +107,12 @@
           ];
         };
       nixosConfigurations."home" = let
-        hardwareConfiguration = ./nixos/home-hardware-configuration.nix;
+        hardwareConfiguration = ./nixos/hardware-home.nix;
       in
         nixos.lib.nixosSystem {
           specialArgs = { inherit inputs hardwareConfiguration pkgs oldpkgs; };
           modules = [
-            ./nixos/home-configuration.nix
+            ./nixos/home.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true; # makes hm use nixos's pkgs value
