@@ -46,8 +46,6 @@
     pkgs.python312Full
     pkgs.just
     pkgs.tshark
-    pkgs.emacs
-    pkgs.emacsPackages.vterm
     pkgs.nano
     pkgs.source-code-pro
   ];
@@ -80,6 +78,11 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+    extraPackages = epkgs: [ epkgs.vterm ];
+  };
   home.file."${config.xdg.configHome}/emacs" = {
     recursive = true;
     source = inputs.spacemacs;
@@ -89,6 +92,12 @@
     SPACEMACSDIR = "${config.xdg.configHome}/spacemacs";
     EDITOR = "nano";
   };
+  services.emacs = {
+    enable = true;
+    startWithUserSession = true;
+    socketActivation.enable = false;
+  };
+  systemd.user.startServices = false;
 
   home.file."${config.xdg.configHome}/clangd/config.yaml".text = ''
     CompileFlags:
