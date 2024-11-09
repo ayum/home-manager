@@ -1,6 +1,10 @@
 { pkgs, inputs, oldpkgs, lib ? pkgs.lib, home-manager, config, ... }:
 
 {
+  imports = [
+    ./emacs.nix
+  ];
+
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.language = lib.mkDefault {
@@ -41,8 +45,6 @@
     pkgs.iotop
     pkgs.zip
     pkgs.unzip
-    pkgs.silver-searcher
-    pkgs.fzf
     pkgs.python312Full
     pkgs.just
     pkgs.tshark
@@ -52,6 +54,7 @@
   fonts.fontconfig.enable = true;
   targets.genericLinux.enable = true;
   xdg.enable = true;
+  systemd.user.startServices = false;
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -69,8 +72,8 @@
     settings = {
       use-xdg-base-directories = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
-      substituters = "https://cache.nixos.org https://ayum.cachix.org";
-      trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ayum.cachix.org-1:LuR7eVuXPJK7PwgbmnvNQOp2FQ9TLTToyOVON8fpk3E=";
+      substituters = [ "https://cache.nixos.org" "https://nix-community.cachix.org" "https://ayum.cachix.org" ];
+      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" "ayum.cachix.org-1:LuR7eVuXPJK7PwgbmnvNQOp2FQ9TLTToyOVON8fpk3E=" ];
       experimental-features = ["ca-derivations" "nix-command" "flakes"];
     };
   };
@@ -83,26 +86,9 @@
     package = pkgs.openvscode-server;
   };
 
-  programs.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-    extraPackages = epkgs: [ epkgs.vterm ];
-  };
-  home.file."${config.xdg.configHome}/emacs" = {
-    recursive = true;
-    source = inputs.spacemacs;
-  };
-  home.file."${config.xdg.configHome}/spacemacs/init.el".source = ./spacemacs/init.el;
   home.sessionVariables = {
-    SPACEMACSDIR = "${config.xdg.configHome}/spacemacs";
     EDITOR = "nano";
   };
-  services.emacs = {
-    enable = true;
-    startWithUserSession = true;
-    socketActivation.enable = false;
-  };
-  systemd.user.startServices = false;
 
   home.file."${config.xdg.configHome}/clangd/config.yaml".text = ''
     CompileFlags:

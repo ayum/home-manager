@@ -20,6 +20,41 @@
         "type": "github"
       }
     },
+    "doomemacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731046728,
+        "narHash": "sha256-JTfnG1lyZICnxvz6FjO+y1UdlPhnv3qbeXKuFxtT7BM=",
+        "owner": "doomemacs",
+        "repo": "doomemacs",
+        "rev": "fdcab58a1b28a3b2bde23789e2a4c9c1391070b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "doomemacs",
+        "repo": "doomemacs",
+        "type": "github"
+      }
+    },
+    "emacs-overlay": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-stable": "nixpkgs-stable"
+      },
+      "locked": {
+        "lastModified": 1731290007,
+        "narHash": "sha256-E8Caw6l/73iVFEYGch8Yc31fXCtSY30xxb+CsTN1gG0=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "e94b9aef9633ffb9ea2bebe8c9b999618ec15109",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -58,6 +93,38 @@
       }
     },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1731139594,
+        "narHash": "sha256-IigrKK3vYRpUu+HEjPL/phrfh7Ox881er1UEsZvw9Q4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "76612b17c0ce71689921ca12d9ffdc9c23ce40b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-stable": {
+      "locked": {
+        "lastModified": 1730963269,
+        "narHash": "sha256-rz30HrFYCHiWEBCKHMffHbMdWJ35hEkcRVU0h7ms3x0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "83fb6c028368e465cd19bb127b86f971a5e41ebc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-24.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1730272153,
         "narHash": "sha256-B5WRZYsRlJgwVHIV6DvidFN7VX7Fg9uuwkRW9Ha8z+w=",
@@ -115,28 +182,13 @@
     "root": {
       "inputs": {
         "disko": "disko",
+        "doomemacs": "doomemacs",
+        "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "nixos": "nixos",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "oldnixpkgs": "oldnixpkgs",
-        "plasma-manager": "plasma-manager",
-        "spacemacs": "spacemacs"
-      }
-    },
-    "spacemacs": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1730799954,
-        "narHash": "sha256-BaezCBSTBxw+tOl76NfaWpj2RHuNiUkhqywGgvrWqpU=",
-        "owner": "syl20bnr",
-        "repo": "spacemacs",
-        "rev": "60dcd8cf95f8d4b249c605d25bca2adb0dfd6318",
-        "type": "github"
-      },
-      "original": {
-        "owner": "syl20bnr",
-        "repo": "spacemacs",
-        "type": "github"
+        "plasma-manager": "plasma-manager"
       }
     }
   },

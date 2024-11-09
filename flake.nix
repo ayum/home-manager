@@ -19,11 +19,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    spacemacs = {
+    doomemacs = {
       type = "github";
-      owner = "syl20bnr";
-      repo = "spacemacs";
+      owner = "doomemacs";
+      repo = "doomemacs";
       flake = false;
+    };
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+#      inputs.nixpkgs.follows = "nixpkgs";
+#      inputs.nixpkgs-stable.follows = "oldnixpkgs";
     };
   };
 
