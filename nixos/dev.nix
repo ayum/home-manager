@@ -26,6 +26,9 @@
       ];
       auto-optimise-store = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
+      trusted-users = [ "@root" "@wheel" "@sudo" "@adm" "@admin" ];
+      substituters = [ "https://cache.nixos.org" "https://nix-community.cachix.org" "https://ayum.cachix.org" ];
+      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" "ayum.cachix.org-1:LuR7eVuXPJK7PwgbmnvNQOp2FQ9TLTToyOVON8fpk3E=" ];
     };
     channel.enable = false;
   };
