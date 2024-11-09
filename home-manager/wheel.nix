@@ -5,6 +5,6 @@
     ./common.nix
   ];
 
-  home.username = "root";
-  home.homeDirectory = "/root";
+  home.username = "wheel";
+  home.homeDirectory = "/home/wheel";
 }

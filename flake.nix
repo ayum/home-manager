@@ -44,12 +44,12 @@
       };
     in {
       inherit homeModules;
-      homeConfigurations."root" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."wheel" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit inputs oldpkgs; };
 
         modules = [
-          ./home-manager/root.nix
+          ./home-manager/wheel.nix
           ./home-manager/git-ayum.nix
           ./home-manager/mail.nix
           ./home-manager/cachix.nix
@@ -96,8 +96,8 @@
               home-manager.backupFileExtension = "backup";
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs pkgs oldpkgs; }; # allows access to flake inputs in hm modules
-              home-manager.users.root.imports = [
-                ./home-manager/root.nix
+              home-manager.users.wheel.imports = [
+                ./home-manager/wheel.nix
                 ./home-manager/mail.nix
                 ./home-manager/cachix.nix
                 homeModules.ayumprofile
@@ -118,7 +118,7 @@
               home-manager.useGlobalPkgs = true; # makes hm use nixos's pkgs value
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs pkgs oldpkgs; }; # allows access to flake inputs in hm modules
-              home-manager.users.root.imports = [
+              home-manager.users.me.imports = [
                 ./home-manager/me.nix
                 homeModules.ayumprofile
                 homeModules.ayumsecrets

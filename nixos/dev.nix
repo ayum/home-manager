@@ -41,20 +41,11 @@
 
   users.enforceIdUniqueness = false;
   users.users = {
-    root = {
-      initialPassword = "root";
-      initialHashedPassword = null;
-      isNormalUser = false;
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBYiRMp0kc8LEOAhaEkI7XwGRhqdUS2radGD6jNhZFT openpgp:0x79C95C07"
-      ];
-      extraGroups = [ ];
-      linger = true;
-    };
     wheel = {
-      uid = 0;
+      uid = 1;
       group = "root";
-      home = "/root";
+      home = "/home/wheel";
+      createHome = true;
       useDefaultShell = true;
       initialPassword = "wheel";
       initialHashedPassword = null;
@@ -65,7 +56,20 @@
       extraGroups = [ "wheel" ];
       linger = true;
     };
+    root = {
+      initialPassword = "root";
+      initialHashedPassword = null;
+      isNormalUser = false;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBYiRMp0kc8LEOAhaEkI7XwGRhqdUS2radGD6jNhZFT openpgp:0x79C95C07"
+      ];
+      extraGroups = [ ];
+      linger = true;
+    };
   };
+  security.sudo.extraRules = [
+    { groups = [ "wheel" ]; commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ]; }
+  ];
 
   i18n.defaultLocale = "ru_RU.UTF-8";
 
