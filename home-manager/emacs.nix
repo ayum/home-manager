@@ -12,10 +12,12 @@
       ]
     );
   };
-  home.file."${config.xdg.configHome}/emacs".source = inputs.doomemacs;
-  home.file."${config.xdg.configHome}/doom/config.el".source = ./doom/config.el;
-  home.file."${config.xdg.configHome}/doom/init.el".source = ./doom/init.el; 
-  home.file."${config.xdg.configHome}/doom/packages.el".source = ./doom/packages.el;
+
+  home.file."${config.xdg.configHome}/emacs" = {
+    recursive = true;
+    source = inputs.spacemacs;
+  };
+  home.file."${config.xdg.configHome}/spacemacs/init.el".source = ./spacemacs/init.el;
   home.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
     emacs-all-the-icons-fonts
@@ -27,16 +29,21 @@
     ripgrep
   ];
   home.sessionVariables = {
-    EMACSDIR = "${config.xdg.configHome}/emacs";
-    DOOMDIR = "${config.xdg.configHome}/doom";
-    DOOMLOCALDIR = "${config.xdg.cacheHome}/doom-emacs";
+    SPACEMACSDIR = "${config.xdg.configHome}/spacemacs";
   };
-  home.sessionPath = [
-    "${config.xdg.configHome}/emacs/bin"
-  ];
-#  services.emacs = {
-#    enable = true;
-#    startWithUserSession = true;
-#    socketActivation.enable = false;
-#  };
+  services.emacs = {
+    enable = true;
+    startWithUserSession = true;
+    socketActivation.enable = false;
+  };
+#  home.activation.spacemacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+#    if ! [ -d "${config.xdg.configHome}/emacs" ]; then
+#      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.configHome}/emacs"
+#      $DRY_RUN_CMD cd "${config.xdg.configHome}/emacs"
+#      $DRY_RUN_CMD ${lib.getExe pkgs.git} init
+#      $DRY_RUN_CMD ${lib.getExe pkgs.git} remote add origin "https://github.com/syl20bnr/spacemacs.git"
+#      $DRY_RUN_CMD ${lib.getExe pkgs.git} fetch --depth=1 origin ${inputs.spacemacs.rev}
+#      $DRY_RUN_CMD ${lib.getExe pkgs.git} reset --hard FETCH_HEAD
+#    fi
+#  '';
 }

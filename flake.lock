@@ -20,22 +20,6 @@
         "type": "github"
       }
     },
-    "doomemacs": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1731046728,
-        "narHash": "sha256-JTfnG1lyZICnxvz6FjO+y1UdlPhnv3qbeXKuFxtT7BM=",
-        "owner": "doomemacs",
-        "repo": "doomemacs",
-        "rev": "fdcab58a1b28a3b2bde23789e2a4c9c1391070b6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "doomemacs",
-        "repo": "doomemacs",
-        "type": "github"
-      }
-    },
     "emacs-overlay": {
       "inputs": {
         "nixpkgs": "nixpkgs",
@@ -182,13 +166,29 @@
     "root": {
       "inputs": {
         "disko": "disko",
-        "doomemacs": "doomemacs",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "nixos": "nixos",
         "nixpkgs": "nixpkgs_2",
         "oldnixpkgs": "oldnixpkgs",
-        "plasma-manager": "plasma-manager"
+        "plasma-manager": "plasma-manager",
+        "spacemacs": "spacemacs"
+      }
+    },
+    "spacemacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731316655,
+        "narHash": "sha256-TWSGTLbnaAOZp0+j0F2yjCCnXGbfBEPWa29LylzxyT0=",
+        "owner": "syl20bnr",
+        "repo": "spacemacs",
+        "rev": "d52d633384fc4bc38bf8c43bd7fc0a800fa00802",
+        "type": "github"
+      },
+      "original": {
+        "owner": "syl20bnr",
+        "repo": "spacemacs",
+        "type": "github"
       }
     }
   },
