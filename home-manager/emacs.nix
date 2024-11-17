@@ -31,6 +31,8 @@
         lsp-ui
         lsp-ivy
         lsp-treemacs
+        company
+        editorconfig
       ]
     );
   };
@@ -48,6 +50,7 @@
     fd
     ripgrep
     silver-searcher
+    fzf
     clang-tools
   ];
   services.emacs = {
@@ -58,4 +61,5 @@
     socketActivation.enable = false;
   };
   systemd.user.services.emacs.Service.Type = lib.mkForce "exec";
+  systemd.user.startServices = true;
 }

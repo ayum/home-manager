@@ -54,7 +54,7 @@
   fonts.fontconfig.enable = true;
   targets.genericLinux.enable = true;
   xdg.enable = true;
-  systemd.user.startServices = false;
+  systemd.user.startServices = lib.mkDefault false;
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

@@ -4,10 +4,13 @@
 (setq coding-system-for-read 'utf-8)
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
-(setq default-fill-column 80)
+(setq-default fill-column 88)
+(setq fill-column 88)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
 (setq auto-save-list-file-prefix (expand-file-name "~/.local/state/emacs-auto-save-list/"))
+
+(advice-add #'undefined :override #'keyboard-quit)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -34,6 +37,11 @@
   (interactive)
   (switch-to-buffer nil))
 
+(defun evil-keyboard-quit ()
+  (interactive)
+  (and evil-mode (evil-force-normal-state))
+  (keyboard-quit))
+
 (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 (set-face-attribute 'default t :font "SourceCodePro" )
 
@@ -46,49 +54,91 @@
   :ensure t
   :demand t
   :config
+  (general-auto-unbind-keys)
   (general-evil-setup t)
+  (general-nmap "SPC" (general-simulate-key "C-SPC"))
+;  (general-nmap "C-@" (general-simulate-key "C-SPC"))
+;  (general-emap "C-@" (general-simulate-key "C-SPC"))
+;  (general-mmap "C-@" (general-simulate-key "C-SPC"))
+;  (general-omap "C-@" (general-simulate-key "C-SPC"))
+;  (general-rmap "C-@" (general-simulate-key "C-SPC"))
+;  (general-iemap "C-@" (general-simulate-key "C-SPC"))
+;  (general-nvmap "C-@" (general-simulate-key "C-SPC"))
+  (general-define-key "C-@" (general-simulate-key "C-SPC"))
+  (general-define-key "C-SPC SPC" (general-simulate-key "C-SPC C-SPC" :which-key "most used"))
+  (general-unbind 'treemacs treemacs-mode-map
+   :with 'ignore
+   "U")
+  (general-emap
+   :keymaps 'treemacs-mode-map
+   "SPC" (general-simulate-key "C-SPC")
+   "/" 'counsel-fzf
+   "U" 'beginning-of-buffer)
   (general-define-key
    "M-x" 'counsel-M-x)
   (general-define-key
+   :states '(visual insert motion)
+   "C-g" 'evil-keyboard-quit)
+  (general-define-key
    :states '(normal visual emacs)
    "/" 'swiper)
+  (general-create-definer leader-key-spc
+   :states '(normal visual insert motion emacs)
+   :keymaps 'override
+   :prefix "C-SPC C-SPC")
+  (leader-key-spc
+   "" '(:ignore t :which-key "most used")
+   "b" 'ivy-switch-buffer
+   "s" 'save-buffer
+   "w" 'whitespace-mode
+   "t" 'treemacs
+   "m" 'hide-mode-line-mode
+   "r" 'display-fill-column-indicator-mode
+   "n" 'display-line-numbers-mode
+   "l" 'toggle-truncate-lines
+   "c" 'display-buffer-other-frame
+   "f" 'select-frame-by-name)
   (general-create-definer leader-key
    :states '(normal visual insert motion emacs)
    :keymaps 'override
-   :prefix "SPC"
-   :non-normal-prefix "C-SPC")
+   :prefix "C-SPC")
   (leader-key
-   "'"   'multi-vterm
-   "/"   'counsel-ag
-   ":"   'execute-extended-command
-   "TAB" 'toggle-buffers
-   "SPC" 'counsel-M-x
+   "'"     'multi-vterm
+   "/"     'swiper
+   ":"     'counsel-M-x
+   "TAB"   'toggle-buffers
+
+   "<right>" 'windmove-right
+   "<left>"  'windmove-left
+   "<up>"    'windmove-up
+   "<down>"  'windmove-down
 
    "b" '(:ignore t :which-key "buffers")
-   "bb"  'ivy-switch-buffer
+   "bb" 'ivy-switch-buffer
+   "bx" 'kill-buffer
 
    "w" '(:ignore t :which-key "window")
-   "w <right>" 'windmove-right
-   "w <left>"  'windmove-left
-   "w <up>"    'windmove-up
-   "w <down>"  'windmove-down
+   "w <right>" 'windmove-swap-states-right
+   "w <left>"  'windmove-swap-states-left
+   "w <up>"    'windmove-swap-states-up
+   "w <down>"  'windmove-swap-states-down
    "w/"        'split-window-right
    "w-"        'split-window-below
    "wx"        'delete-window
+   "wo"        'delete-other-windows
+   "w="        'balance-windows
 
    "a" '(:ignore t :which-key "applications")
-   "ar" 'ranger
-   "ad" 'deer
-
-   "s" '(:ignore t :which-key "search")
-   "sc" 'evil-ex-nohighlight
-   "sl" 'ivy-resume
+   "am" 'mail
+   "ag" 'magit
 
    "t" '(:ignore t :which-key "toggles")
    "tn" 'display-line-numbers-mode
    "tl" 'toggle-truncate-lines
    "tm" 'hide-mode-line-mode
    "tt" 'treemacs
+   "tr" 'display-fill-column-indicator-mode
+   "tw" 'whitespace-mode
    
    "x" '(:ignore t :which-key "text")
    "xl" '(:ignore t :which-key "lines")
@@ -101,14 +151,9 @@
    "qq" 'save-buffers-kill-terminal
    "qr" 'restart-emacs))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
-
 (use-package evil
   :ensure t
+  :demand t
   :init
   (setq evil-disable-insert-state-bindings t
         evil-want-keybinding nil
@@ -119,16 +164,28 @@
         evil-want-Y-yank-to-eol t
         evil-split-window-below t
         evil-vsplit-window-right t
-        evil-respect-visual-line-mode t)
+        evil-respect-visual-line-mode t
+        evil-move-beyond-eol t)
   :config
   (evil-set-initial-state 'vterm-mode 'insert)
+  (evil-set-initial-state 'treemacs-mode 'emacs)
+  (evil-set-undo-system 'undo-redo)
   (evil-mode 1)
   (setq-default evil-escape-delay 0.01))
+(add-hook 'c-mode-common-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package hide-mode-line
   :ensure t
   :commands hide-mode-line-mode)
-(global-hide-mode-line-mode t)
+;;Uncomment to hide by default
+;;(global-hide-mode-line-mode t)
 
 (use-package spacemacs-theme
   :ensure t
@@ -146,21 +203,19 @@
   (treemacs-load-theme "nerd-icons"))
 (use-package treemacs
   :ensure t
-  :defer 2
-  :general
-  (:keymaps 'treemacs-mode-map
-   :states 'treemacs
-   "f f" 'treemacs-find-file)
+  :after treemacs-nerd-icons
+  :init
+  (setq treemacs-user-mode-line-format
+   (list
+    '(:eva evil-mode-line-tag)
+    " "
+    '(:eval (treemacs-workspace->name (treemacs-current-workspace)))))
   :config
   (progn
     (setq treemacs-persist-file (expand-file-name "~/.local/state/emacs-treemacs"))
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always)))
-(use-package treemacs-evil
-  :ensure t
-  :after (treemacs evil)
-  :defer 1)
 
 (use-package which-key
   :ensure t
@@ -197,20 +252,34 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package company
+  :ensure t
+  :init
+  (setq company-idle-delay 0.0
+        company-minimum-prefix-length 1))
+(add-hook 'after-init-hook 'global-company-mode)
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 (setq lsp-clients-clangd-executable "clangd")
 (use-package lsp-mode
   :ensure t
   :demand t
   :init
-  (setq lsp-keymap-prefix "SPC l")
+  (setq lsp-keymap-prefix "C-SPC l"
+        lsp-idle-delay 0.1
+        lsp-session-file (expand-file-name "~/.local/state/emacs-lsp-session"))
   :config
   (fset 'lsp-command-map lsp-command-map)
   (lsp-enable-which-key-integration t)
-  :hook ((c-mode . lsp))
+  :hook ((c-mode . lsp)
+         (c++-mode . lsp))
   :commands (lsp lsp-deferred)
   :general
-  (leader-key
-    "l" 'lsp-command-map))
+  (leader-key "l" 'lsp-command-map))
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 (use-package lsp-ui :after lsp :commands lsp-ui-mode)
 (use-package lsp-ivy :after lsp :commands lsp-ivy-workspace-symbol)
