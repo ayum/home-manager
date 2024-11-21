@@ -13,6 +13,13 @@
 (setq initial-major-mode 'org-mode)
 (setq auto-save-list-file-prefix (expand-file-name "~/.local/state/emacs-auto-save-list/"))
 
+(when (timerp undo-auto-current-boundary-timer)
+  (cancel-timer undo-auto-current-boundary-timer))
+(fset 'undo-auto--undoable-change
+      (lambda () (add-to-list 'undo-auto--undoably-changed-buffers (current-buffer))))
+;; Undo charachter by character
+;;(fset 'undo-auto-amalgamate 'ignore)
+
 (advice-add #'undefined :override #'keyboard-quit)
 
 (require 'package)
@@ -48,11 +55,6 @@
 (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 (set-face-attribute 'default t :font "SourceCodePro" )
 
-;;(use-package key-chord
-;;  :ensure t
-;;  :config
-;;  (key-chord-mode 1)
-;;  (key-chord-define evil-insert-state-map "kj" 'evil-normal-state))
 (use-package general
   :ensure t
   :demand t
@@ -160,6 +162,7 @@
   :init
   (setq evil-disable-insert-state-bindings t
         evil-want-keybinding nil
+        evil-want-fine-undo t
         evil-want-C-u-scroll t
         evil-want-C-i-jump t
         evil-want-C-d-scroll t
@@ -178,6 +181,19 @@
 (add-hook 'c-mode-common-hook
           (lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'after-save-hook 'evil-force-normal-state)
+(defun maybe-call-undo-boundary ()
+  (let ((c last-command-event))
+    (if (or (eq c '13) (eq c '32) (eq c 'escape) (eq c 'prior) (eq c 'next) (eq c 'left) (eq c 'right) (eq c 'up) (eq c 'down))
+      (undo-boundary))))
+(add-hook 'evil-insert-state-entry-hook
+  (lambda ()
+    (add-hook 'post-command-hook 'maybe-call-undo-boundary)))
+
+(use-package key-chord
+  :ensure t
+  :config
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map "kj" 'evil-normal-state))
 
 (use-package exec-path-from-shell
   :ensure t
