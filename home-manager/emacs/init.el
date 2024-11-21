@@ -5,7 +5,10 @@
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
 (setq-default fill-column 88)
-(setq fill-column 88)
+(setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+(setq scroll-preserve-screen-position t)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
 (setq auto-save-list-file-prefix (expand-file-name "~/.local/state/emacs-auto-save-list/"))
@@ -174,6 +177,7 @@
   (setq-default evil-escape-delay 0.01))
 (add-hook 'c-mode-common-hook
           (lambda () (modify-syntax-entry ?_ "w")))
+(add-hook 'after-save-hook 'evil-force-normal-state)
 
 (use-package exec-path-from-shell
   :ensure t
