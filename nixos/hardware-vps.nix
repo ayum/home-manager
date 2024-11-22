@@ -17,6 +17,11 @@
   boot.swraid.enable = lib.mkDefault false;
 
   networking.useDHCP = lib.mkDefault true;
+  networking.firewall.enable = lib.mkDefault true;
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 8000; to = 8888; }
+  ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
