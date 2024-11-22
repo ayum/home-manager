@@ -5,6 +5,10 @@
     ./emacs.nix
   ];
 
+  news.display = "silent";
+  news.json = lib.mkForce { };
+  news.entries = lib.mkForce [ ];
+
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.language = lib.mkDefault {
