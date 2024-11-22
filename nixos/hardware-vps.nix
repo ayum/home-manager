@@ -10,6 +10,7 @@
 
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "virtio_blk" ];
   boot.initrd.kernelModules = [ ];
+  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
   boot.kernelModules = lib.mkDefault [ ];
   boot.extraModulePackages = lib.mkDefault [ ];
