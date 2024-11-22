@@ -34,6 +34,7 @@
   };
 
   networking.hostName = "dev";
+  networking.domain = "ayum.ru";
 
   boot = {
     loader.grub = {
@@ -147,4 +148,24 @@ set completion-ignore-case On
   };
 
   system.stateVersion = "24.04";
+
+  security.acme.acceptTerms = true;
+  security.acme.defaults.email = "ayum@ayum.ru";
+  services.nginx = {
+    enable = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    virtualHosts."dev.ayum.ru" =  {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8080";
+        proxyWebsockets = true;
+        extraConfig =
+          # required when the server wants to use HTTP Authentication
+          "proxy_pass_header Authorization;"
+          ;
+      };
+    };
+  };
 }

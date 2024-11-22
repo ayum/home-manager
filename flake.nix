@@ -59,6 +59,7 @@
           ./home-manager/git-ayum.nix
           ./home-manager/mail.nix
           ./home-manager/cachix.nix
+          ./home-manager/openvscode-server.nix
           homeModules.ayumprofile
           homeModules.ayumsecrets
         ];
