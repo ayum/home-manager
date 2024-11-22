@@ -117,6 +117,10 @@
    "<left>"  'windmove-left
    "<up>"    'windmove-up
    "<down>"  'windmove-down
+   "l" 'windmove-right
+   "h" 'windmove-left
+   "k" 'windmove-up
+   "j" 'windmove-down
 
    "b" '(:ignore t :which-key "buffers")
    "bb" 'ivy-switch-buffer
@@ -127,6 +131,10 @@
    "w <left>"  'windmove-swap-states-left
    "w <up>"    'windmove-swap-states-up
    "w <down>"  'windmove-swap-states-down
+   "wl"        'windmove-swap-states-right
+   "wh"        'windmove-swap-states-left
+   "wk"        'windmove-swap-states-up
+   "wj"        'windmove-swap-states-down
    "w/"        'split-window-right
    "w-"        'split-window-below
    "wx"        'delete-window
@@ -289,7 +297,7 @@
   :ensure t
   :demand t
   :init
-  (setq lsp-keymap-prefix "C-SPC l"
+  (setq lsp-keymap-prefix "C-SPC ."
         lsp-idle-delay 0.1
         lsp-session-file (expand-file-name "~/.local/state/emacs-lsp-session"))
   :config
@@ -299,7 +307,7 @@
          (c++-mode . lsp))
   :commands (lsp lsp-deferred)
   :general
-  (leader-key "l" 'lsp-command-map))
+  (leader-key "." 'lsp-command-map))
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 (use-package lsp-ui :after lsp :commands lsp-ui-mode)
 (use-package lsp-ivy :after lsp :commands lsp-ivy-workspace-symbol)
