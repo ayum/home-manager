@@ -12,6 +12,7 @@
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
 (setq auto-save-list-file-prefix (expand-file-name "~/.local/state/emacs-auto-save-list/"))
+(setopt use-short-answers t)
 
 (when (timerp undo-auto-current-boundary-timer)
   (cancel-timer undo-auto-current-boundary-timer))
@@ -39,6 +40,7 @@
 (menu-bar-mode   -1)
 (global-auto-revert-mode t)
 (electric-pair-mode)
+(desktop-save-mode 1)
 
 (defun display-startup-echo-area-message ()
   (message ""))
