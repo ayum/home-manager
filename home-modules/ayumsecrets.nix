@@ -44,6 +44,8 @@ ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent 1>&2 2>/dev/null || :
 ${pkgs.gnupg}/bin/gpgconf --remove-socketdir 1>&2 2>/dev/null || :
 ${pkgs.coreutils}/bin/rm -rf /run/user/$userid/gnupg
 ${pkgs.coreutils}/bin/touch /run/user/$userid/gnupg
+echo -e "%Assuan%\nsocket=${config.home.homeDirectory}/.gnupg/S.gpg-agent" > /run/user/$userid/gnupg/S.gpg-agent 
+echo -e "%Assuan%\nsocket=${config.home.homeDirectory}/.gnupg/S.gpg-agent.ssh" > /run/user/$userid/gnupg/S.gpg-agent.ssh 
 ${pkgs.coreutils}/bin/chmod +t /run/user/$userid/gnupg
 ${pkgs.gnupg}/bin/gpg-connect-agent --no-autostart -S "${config.home.homeDirectory}/.gnupg/S.gpg-agent" "GETINFO pid" /bye 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q -i "ERR 67109115 " || { echo "It seems that forwarded gpg-agent in not running, not decrypting anything"; false; }
 cd ${config.home.homeDirectory}
@@ -60,7 +62,7 @@ ayumdecrypt () {
     ${pkgs.coreutils}/bin/install -b -D /dev/null "$f"
     ${pkgs.coreutils}/bin/rm -f "$f"
     printf "%s " "Decrypting ${config.home.homeDirectory}/$fname"
-    ${pkgs.gnupg}/bin/gpg --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo "ok" || false
+    ${pkgs.gnupg}/bin/gpg --no-autostart --decrypt --output "$f" "$fin" 1>&2 2>/dev/null && echo "ok" || false
     if [ -n "$mode" ]; then ${pkgs.coreutils}/bin/chmod "$mode" "$f"; fi
     mode=$(${pkgs.gnused}/bin/sed -n 's/^Comment: mode=//gp' "$fin" | head -n1)
     if [ -n "$mode" ]; then ${pkgs.coreutils}/bin/chmod "$mode" "$f"; fi 
