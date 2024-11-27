@@ -38,8 +38,8 @@
   };
 
   home.shellAliases.e = "emacsclient -c";
-  home.file."${config.xdg.configHome}/emacs/init.el".source = ./emacs/init.el;
-  home.file."${config.xdg.configHome}/emacs/early-init.el".source = ./emacs/early-init.el;
+  home.file."${config.home.homeDirectory}/.emacs.d/init.el".source = ./emacs/init.el;
+  home.file."${config.home.homeDirectory}/.emacs.d/early-init.el".source = ./emacs/early-init.el;
   home.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
     emacs-all-the-icons-fonts

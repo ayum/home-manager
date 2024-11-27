@@ -11,7 +11,6 @@
 (setq scroll-preserve-screen-position t)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
-(setq auto-save-list-file-prefix (expand-file-name "~/.local/state/emacs-auto-save-list/"))
 (setopt use-short-answers t)
 
 (when (timerp undo-auto-current-boundary-timer)
@@ -242,7 +241,6 @@
     '(:eval (treemacs-workspace->name (treemacs-current-workspace)))))
   :config
   (progn
-    (setq treemacs-persist-file (expand-file-name "~/.local/state/emacs-treemacs"))
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always)))
@@ -268,9 +266,7 @@
 (use-package ivy
   :ensure t)
 (use-package smex
-  :ensure t
-  :init
-  (setq smex-save-file (expand-file-name "~/.local/state/emacs-smex")))
+  :ensure t)
 (use-package counsel
   :ensure t
   :after smex)
@@ -300,8 +296,7 @@
   :demand t
   :init
   (setq lsp-keymap-prefix "C-SPC ."
-        lsp-idle-delay 0.1
-        lsp-session-file (expand-file-name "~/.local/state/emacs-lsp-session"))
+        lsp-idle-delay 0.1)
   :config
   (fset 'lsp-command-map lsp-command-map)
   (lsp-enable-which-key-integration t)
