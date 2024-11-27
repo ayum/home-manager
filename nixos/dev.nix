@@ -144,7 +144,10 @@ $endif
 # appended after end of default inputrc  
 set completion-ignore-case On
 '';
-    systemPackages = map lib.lowPrio [ ];
+
+  systemPackages = map lib.lowPrio [
+       pkgs.ppp
+    ];
   };
 
   system.stateVersion = "24.04";
