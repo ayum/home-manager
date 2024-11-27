@@ -11,6 +11,7 @@
 (setq scroll-preserve-screen-position t)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
+(setq read-file-name-completion-ignore-case t)
 (setopt use-short-answers t)
 
 (when (timerp undo-auto-current-boundary-timer)
@@ -40,6 +41,8 @@
 (global-auto-revert-mode t)
 (electric-pair-mode)
 (desktop-save-mode 1)
+(add-hook 'server-after-make-frame-hook
+  (lambda () (desktop-read)))
 
 (defun display-startup-echo-area-message ()
   (message ""))
@@ -63,23 +66,15 @@
   (general-auto-unbind-keys)
   (general-evil-setup t)
   (general-nmap "SPC" (general-simulate-key "C-SPC"))
-;  (general-nmap "C-@" (general-simulate-key "C-SPC"))
-;  (general-emap "C-@" (general-simulate-key "C-SPC"))
-;  (general-mmap "C-@" (general-simulate-key "C-SPC"))
-;  (general-omap "C-@" (general-simulate-key "C-SPC"))
-;  (general-rmap "C-@" (general-simulate-key "C-SPC"))
-;  (general-iemap "C-@" (general-simulate-key "C-SPC"))
-;  (general-nvmap "C-@" (general-simulate-key "C-SPC"))
+  (general-mmap "SPC" (general-simulate-key "C-SPC"))
   (general-define-key "C-@" (general-simulate-key "C-SPC"))
   (general-define-key "C-SPC SPC" (general-simulate-key "C-SPC C-SPC" :which-key "most used"))
-  (general-unbind 'treemacs treemacs-mode-map
-   :with 'ignore
-   "U")
-  (general-emap
-   :keymaps 'treemacs-mode-map
-   "SPC" (general-simulate-key "C-SPC")
-   "/" 'counsel-fzf
-   "U" 'beginning-of-buffer)
+;  (general-define-key :keymaps '(treemacs-mode-map help-mode-map)
+;   :states '(treemacs motion)
+;   "SPC" (general-simulate-key "C-SPC"))
+  (general-define-key :keymaps 'treemacs-mode-map
+   :states 'treemacs
+   "/" 'counsel-fzf)
   (general-define-key
    "M-x" 'counsel-M-x)
   (general-define-key
@@ -170,7 +165,7 @@
   :demand t
   :init
   (setq evil-disable-insert-state-bindings t
-        evil-want-keybinding nil
+        evil-want-keybinding t
         evil-want-fine-undo t
         evil-want-C-u-scroll t
         evil-want-C-i-jump t
@@ -183,7 +178,6 @@
         evil-move-beyond-eol t)
   :config
   (evil-set-initial-state 'vterm-mode 'insert)
-  (evil-set-initial-state 'treemacs-mode 'emacs)
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1)
   (setq-default evil-escape-delay 0.01))
@@ -233,17 +227,13 @@
 (use-package treemacs
   :ensure t
   :after treemacs-nerd-icons
-  :init
-  (setq treemacs-user-mode-line-format
-   (list
-    '(:eva evil-mode-line-tag)
-    " "
-    '(:eval (treemacs-workspace->name (treemacs-current-workspace)))))
   :config
   (progn
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always)))
+(use-package treemacs-evil
+  :ensure t)
 
 (use-package which-key
   :ensure t
