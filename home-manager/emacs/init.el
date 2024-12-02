@@ -261,7 +261,9 @@
   :ensure t
   :after smex)
 
-(use-package evil-nerd-commenter :ensure t)
+(use-package evil-nerd-commenter
+  :ensure t
+  :init (evilnc-default-hotkeys))
 
 (use-package evil-surround
   :ensure t
