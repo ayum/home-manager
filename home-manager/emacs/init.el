@@ -175,7 +175,9 @@
         evil-split-window-below t
         evil-vsplit-window-right t
         evil-respect-visual-line-mode t
-        evil-move-beyond-eol t)
+        evil-move-beyond-eol t
+        evil-v$-excludes-newline t
+        evil-move-cursor-back nil)
   :config
   (evil-set-initial-state 'vterm-mode 'insert)
   (evil-set-undo-system 'undo-redo)
