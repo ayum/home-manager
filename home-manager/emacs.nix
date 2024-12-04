@@ -11,9 +11,8 @@
         multi-vterm
         exec-path-from-shell
         treesit-grammars.with-all-grammars
-        evil
-        evil-surround
-        evil-nerd-commenter
+        meow
+        meow-tree-sitter
         key-chord
         ivy
         which-key
@@ -21,16 +20,9 @@
         spacemacs-theme
         smex
         counsel
-        general
-        tmux-pane
         treemacs
-        treemacs-evil
         treemacs-nerd-icons
         nerd-icons
-        lsp-mode
-        lsp-ui
-        lsp-ivy
-        lsp-treemacs
         company
         editorconfig
       ]

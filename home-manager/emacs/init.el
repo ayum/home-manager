@@ -14,6 +14,10 @@
 (setq read-file-name-completion-ignore-case t)
 (setopt use-short-answers t)
 
+(put 'delete-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
 (when (timerp undo-auto-current-boundary-timer)
   (cancel-timer undo-auto-current-boundary-timer))
 (fset 'undo-auto--undoable-change
@@ -51,154 +55,172 @@
   (interactive)
   (switch-to-buffer nil))
 
-(defun evil-keyboard-quit ()
-  (interactive)
-  (and evil-mode (evil-force-normal-state))
-  (keyboard-quit))
-
 (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 (set-face-attribute 'default t :font "SourceCodePro" )
 
-(use-package general
-  :ensure t
-  :demand t
-  :config
-  (general-auto-unbind-keys)
-  (general-evil-setup t)
-  (general-nmap "SPC" (general-simulate-key "C-SPC"))
-  (general-mmap "SPC" (general-simulate-key "C-SPC"))
-  (general-define-key "C-@" (general-simulate-key "C-SPC"))
-  (general-define-key "C-SPC SPC" (general-simulate-key "C-SPC C-SPC" :which-key "most used"))
-;  (general-define-key :keymaps '(treemacs-mode-map help-mode-map)
-;   :states '(treemacs motion)
-;   "SPC" (general-simulate-key "C-SPC"))
-  (general-define-key :keymaps 'treemacs-mode-map
-   :states 'treemacs
-   "/" 'counsel-fzf)
-  (general-define-key
-   "M-x" 'counsel-M-x)
-  (general-define-key
-   :states '(visual insert motion)
-   "C-g" 'evil-keyboard-quit)
-  (general-define-key
-   :states '(normal visual emacs)
-   "/" 'swiper)
-  (general-create-definer leader-key-spc
-   :states '(normal visual insert motion emacs)
-   :keymaps 'override
-   :prefix "C-SPC C-SPC")
-  (leader-key-spc
-   "" '(:ignore t :which-key "most used")
-   "b" 'ivy-switch-buffer
-   "s" 'save-buffer
-   "w" 'whitespace-mode
-   "t" 'treemacs
-   "m" 'hide-mode-line-mode
-   "r" 'display-fill-column-indicator-mode
-   "n" 'display-line-numbers-mode
-   "l" 'toggle-truncate-lines
-   "c" 'display-buffer-other-frame
-   "f" 'select-frame-by-name)
-  (general-create-definer leader-key
-   :states '(normal visual insert motion emacs)
-   :keymaps 'override
-   :prefix "C-SPC")
-  (leader-key
-   "'"     'multi-vterm
-   "/"     'swiper
-   ":"     'counsel-M-x
-   "TAB"   'toggle-buffers
-
-   "<right>" 'windmove-right
-   "<left>"  'windmove-left
-   "<up>"    'windmove-up
-   "<down>"  'windmove-down
-   "l" 'windmove-right
-   "h" 'windmove-left
-   "k" 'windmove-up
-   "j" 'windmove-down
-
-   "b" '(:ignore t :which-key "buffers")
-   "bb" 'ivy-switch-buffer
-   "bx" 'kill-buffer
-
-   "w" '(:ignore t :which-key "window")
-   "w <right>" 'windmove-swap-states-right
-   "w <left>"  'windmove-swap-states-left
-   "w <up>"    'windmove-swap-states-up
-   "w <down>"  'windmove-swap-states-down
-   "wl"        'windmove-swap-states-right
-   "wh"        'windmove-swap-states-left
-   "wk"        'windmove-swap-states-up
-   "wj"        'windmove-swap-states-down
-   "w/"        'split-window-right
-   "w-"        'split-window-below
-   "wx"        'delete-window
-   "wo"        'delete-other-windows
-   "w="        'balance-windows
-
-   "a" '(:ignore t :which-key "applications")
-   "am" 'mail
-   "ag" 'magit
-
-   "t" '(:ignore t :which-key "toggles")
-   "tn" 'display-line-numbers-mode
-   "tl" 'toggle-truncate-lines
-   "tm" 'hide-mode-line-mode
-   "tt" 'treemacs
-   "tr" 'display-fill-column-indicator-mode
-   "tw" 'whitespace-mode
-   
-   "x" '(:ignore t :which-key "text")
-   "xl" '(:ignore t :which-key "lines")
-   "xls" 'sort-lines
-   
-   "g" '(:ignore t :which-key "code")
-   "gc" 'evilnc-comment-or-uncomment-lines
-
-   "q" '(:ignore t :which-key "quit")
-   "qq" 'save-buffers-kill-terminal
-   "qr" 'restart-emacs))
-
-(use-package evil
+(use-package which-key
   :ensure t
   :demand t
   :init
-  (setq evil-disable-insert-state-bindings t
-        evil-want-keybinding t
-        evil-want-fine-undo t
-        evil-want-C-u-scroll t
-        evil-want-C-i-jump t
-        evil-want-C-d-scroll t
-        evil-want-C-w-delete t
-        evil-want-Y-yank-to-eol t
-        evil-split-window-below t
-        evil-vsplit-window-right t
-        evil-respect-visual-line-mode t
-        evil-move-beyond-eol t
-        evil-v$-excludes-newline t
-        evil-move-cursor-back nil)
+  (setq which-key-separator " ")
+  (setq which-key-prefix-prefix "+")
+  (setq which-key-idle-delay 0.01)
   :config
-  (evil-set-initial-state 'vterm-mode 'insert)
-  (evil-set-undo-system 'undo-redo)
-  (evil-mode 1)
-  (setq-default evil-escape-delay 0.01))
-(add-hook 'c-mode-common-hook
-          (lambda () (modify-syntax-entry ?_ "w")))
-(add-hook 'after-save-hook 'evil-force-normal-state)
-(defun maybe-call-undo-boundary ()
-  (let ((c last-command-event))
-    (if (or (eq c '13) (eq c '32) (eq c 'escape) (eq c 'prior) (eq c 'next) (eq c 'left) (eq c 'right) (eq c 'up) (eq c 'down))
-      (undo-boundary))))
-(add-hook 'evil-insert-state-entry-hook
-  (lambda ()
-    (add-hook 'post-command-hook 'maybe-call-undo-boundary)))
+  (which-key-mode))
+
+(setq ayum-map (make-sparse-keymap))
+(define-key ayum-map (kbd "'")         'multi-vterm)
+(define-key ayum-map (kbd "/")         'swiper)
+(define-key ayum-map (kbd "TAB")       'toggle-buffers)
+(define-key ayum-map (kbd "<right>")   'windmove-right)
+(define-key ayum-map (kbd "<left>")    'windmove-left)
+(define-key ayum-map (kbd "<up>")      'windmove-up)
+(define-key ayum-map (kbd "<down>")    'windmove-down)
+(define-key ayum-map (kbd "l")         'windmove-right)
+(define-key ayum-map (kbd "h")         'windmove-left)
+(define-key ayum-map (kbd "k")         'windmove-up)
+(define-key ayum-map (kbd "j")         'windmove-down)
+;(define-key ayum-map (kbd "b")        '(:ignore t :which-key "buffers"))
+(define-key ayum-map (kbd "bb")        'ivy-switch-buffer)
+(define-key ayum-map (kbd "bx")        'kill-buffer)
+(define-key ayum-map (kbd "bs")        'save-buffer)
+;(define-key ayum-map (kbd "w")        '(:ignore t :which-key "window"))
+(define-key ayum-map (kbd "w <right>") 'windmove-swap-states-right)
+(define-key ayum-map (kbd "w <left>")  'windmove-swap-states-left)
+(define-key ayum-map (kbd "w <up>")    'windmove-swap-states-up)
+(define-key ayum-map (kbd "w <down>")  'windmove-swap-states-down)
+(define-key ayum-map (kbd "wl")        'windmove-swap-states-right)
+(define-key ayum-map (kbd "wh")        'windmove-swap-states-left)
+(define-key ayum-map (kbd "wk")        'windmove-swap-states-up)
+(define-key ayum-map (kbd "wj")        'windmove-swap-states-down)
+(define-key ayum-map (kbd "w/")        'split-window-right)
+(define-key ayum-map (kbd "w-")        'split-window-below)
+(define-key ayum-map (kbd "wx")        'delete-window)
+(define-key ayum-map (kbd "wo")        'delete-other-windows)
+(define-key ayum-map (kbd "w=")        'balance-windows)
+;(define-key ayum-map (kbd "a")        '(:ignore t :which-key "applications"))
+(define-key ayum-map (kbd "am")        'mail)
+(define-key ayum-map (kbd "ag")        'magit)
+;(define-key ayum-map (kbd "t")         '(:ignore t :which-key "toggles"))
+(define-key ayum-map (kbd "tn")        'display-line-numbers-mode)
+(define-key ayum-map (kbd "tl")        'toggle-truncate-lines)
+(define-key ayum-map (kbd "tm")        'hide-mode-line-mode)
+(define-key ayum-map (kbd "tt")        'treemacs)
+(define-key ayum-map (kbd "tr")        'display-fill-column-indicator-mode)
+(define-key ayum-map (kbd "tw")        'whitespace-mode)
+;(define-key ayum-map (kbd "f")         '(:ignore t :which-key "frame"))
+(define-key ayum-map (kbd "fc")        'display-buffer-other-frame)
+(define-key ayum-map (kbd "ff")        'select-frame-by-name)
+;(define-key ayum-map (kbd "x")         '(:ignore t :which-key "text")
+;(define-key ayum-map (kbd "xl")        '(:ignore t :which-key "lines"))
+(define-key ayum-map (kbd "xls")       'sort-lines)
+;(define-key ayum-map (kbd "q")         '(:ignore t :which-key "quit"))
+(define-key ayum-map (kbd "qq")        'save-buffers-kill-terminal)
+(define-key ayum-map (kbd "qr")        'restart-emacs)
+
+
+(defun meow-setup ()
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
+        meow-use-clipboard t)
+
+  (meow-motion-overwrite-define-key
+   '("j" . meow-next)
+   '("k" . meow-prev)
+   '("<escape>" . ignore))
+
+  (meow-leader-define-key
+   `("SPC" . ,ayum-map)
+   ;; SPC j/k will run the original command in MOTION state.
+   '("j" . "H-j")
+   '("k" . "H-k")
+   ;; Use SPC (0-9) for digit arguments.
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("?" . meow-cheatsheet))
+
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("[" . meow-beginning-of-thing)
+   '("]" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("d" . meow-delete)
+   '("D" . meow-backward-delete)
+   '("e" . meow-next-word)
+   '("E" . meow-next-symbol)
+   '("f" . meow-find)
+   '("g" . meow-cancel-selection)
+   '("G" . meow-grab)
+   '("h" . meow-left)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   '("j" . meow-next)
+   '("J" . meow-next-expand)
+   '("k" . meow-prev)
+   '("K" . meow-prev-expand)
+   '("l" . meow-right)
+   '("L" . meow-right-expand)
+   '("m" . meow-join)
+   '("n" . meow-search)
+   '("o" . meow-block)
+   '("O" . meow-to-block)
+   '("p" . meow-yank)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
+   '("s" . meow-kill)
+   '("t" . meow-till)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit)
+   '("w" . meow-mark-word)
+   '("W" . meow-mark-symbol)
+   '("x" . meow-line)
+   '("X" . meow-goto-line)
+   '("y" . meow-save)
+   '("Y" . meow-sync-grab)
+   '("z" . meow-pop-selection)
+   '("'" . repeat)
+   '("<escape>" . ignore)))
+
+(use-package meow
+  :ensure t
+  :demand t
+  :config
+  (meow-setup)
+  (meow-global-mode 1))
 
 (use-package key-chord
   :ensure t
   :config
   (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "kj" 'evil-normal-state))
+  (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -233,18 +255,8 @@
   (progn
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always)))
-(use-package treemacs-evil
-  :ensure t)
-
-(use-package which-key
-  :ensure t
-  :init
-  (setq which-key-separator " ")
-  (setq which-key-prefix-prefix "+")
-  (setq which-key-idle-delay 0.01)
-  :config
-  (which-key-mode))
+    (treemacs-fringe-indicator-mode 'always))
+  :bind (("/" . counsel-fzf)))
 
 (use-package vterm
   :ensure t
@@ -261,16 +273,12 @@
   :ensure t)
 (use-package counsel
   :ensure t
-  :after smex)
+  :after smex
+  :bind (("M-x" . counsel-M-x)))
 
-(use-package evil-nerd-commenter
-  :ensure t
-  :init (evilnc-default-hotkeys))
-
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+;(use-package evil-nerd-commenter
+;  :ensure t
+;  :init (evilnc-default-hotkeys))
 
 (use-package company
   :ensure t
@@ -283,23 +291,3 @@
   :ensure t
   :config
   (editorconfig-mode 1))
-
-(setq lsp-clients-clangd-executable "clangd")
-(use-package lsp-mode
-  :ensure t
-  :demand t
-  :init
-  (setq lsp-keymap-prefix "C-SPC ."
-        lsp-idle-delay 0.1)
-  :config
-  (fset 'lsp-command-map lsp-command-map)
-  (lsp-enable-which-key-integration t)
-  :hook ((c-mode . lsp)
-         (c++-mode . lsp))
-  :commands (lsp lsp-deferred)
-  :general
-  (leader-key "." 'lsp-command-map))
-(add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-(use-package lsp-ui :after lsp :commands lsp-ui-mode)
-(use-package lsp-ivy :after lsp :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :after lsp :commands lsp-treemacs-errors-list)
