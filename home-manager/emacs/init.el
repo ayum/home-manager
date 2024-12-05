@@ -25,7 +25,7 @@
 ;; Undo charachter by character
 ;;(fset 'undo-auto-amalgamate 'ignore)
 
-(advice-add #'undefined :override #'keyboard-quit)
+;;(advice-add #'undefined :override #'keyboard-quit)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -51,10 +51,6 @@
 (defun display-startup-echo-area-message ()
   (message ""))
 
-(defun toggle-buffers ()
-  (interactive)
-  (switch-to-buffer nil))
-
 (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 (set-face-attribute 'default t :font "SourceCodePro" )
 
@@ -68,60 +64,44 @@
   :config
   (which-key-mode))
 
-(setq ayum-map (make-sparse-keymap))
-(define-key ayum-map (kbd "'")         'multi-vterm)
-(define-key ayum-map (kbd "/")         'swiper)
-(define-key ayum-map (kbd "TAB")       'toggle-buffers)
-(define-key ayum-map (kbd "<right>")   'windmove-right)
-(define-key ayum-map (kbd "<left>")    'windmove-left)
-(define-key ayum-map (kbd "<up>")      'windmove-up)
-(define-key ayum-map (kbd "<down>")    'windmove-down)
-(define-key ayum-map (kbd "l")         'windmove-right)
-(define-key ayum-map (kbd "h")         'windmove-left)
-(define-key ayum-map (kbd "k")         'windmove-up)
-(define-key ayum-map (kbd "j")         'windmove-down)
-;(define-key ayum-map (kbd "b")        '(:ignore t :which-key "buffers"))
-(define-key ayum-map (kbd "bb")        'ivy-switch-buffer)
-(define-key ayum-map (kbd "bx")        'kill-buffer)
-(define-key ayum-map (kbd "bs")        'save-buffer)
-;(define-key ayum-map (kbd "w")        '(:ignore t :which-key "window"))
-(define-key ayum-map (kbd "w <right>") 'windmove-swap-states-right)
-(define-key ayum-map (kbd "w <left>")  'windmove-swap-states-left)
-(define-key ayum-map (kbd "w <up>")    'windmove-swap-states-up)
-(define-key ayum-map (kbd "w <down>")  'windmove-swap-states-down)
-(define-key ayum-map (kbd "wl")        'windmove-swap-states-right)
-(define-key ayum-map (kbd "wh")        'windmove-swap-states-left)
-(define-key ayum-map (kbd "wk")        'windmove-swap-states-up)
-(define-key ayum-map (kbd "wj")        'windmove-swap-states-down)
-(define-key ayum-map (kbd "w/")        'split-window-right)
-(define-key ayum-map (kbd "w-")        'split-window-below)
-(define-key ayum-map (kbd "wx")        'delete-window)
-(define-key ayum-map (kbd "wo")        'delete-other-windows)
-(define-key ayum-map (kbd "w=")        'balance-windows)
-;(define-key ayum-map (kbd "a")        '(:ignore t :which-key "applications"))
-(define-key ayum-map (kbd "am")        'mail)
-(define-key ayum-map (kbd "ag")        'magit)
-;(define-key ayum-map (kbd "t")         '(:ignore t :which-key "toggles"))
-(define-key ayum-map (kbd "tn")        'display-line-numbers-mode)
-(define-key ayum-map (kbd "tl")        'toggle-truncate-lines)
-(define-key ayum-map (kbd "tm")        'hide-mode-line-mode)
-(define-key ayum-map (kbd "tt")        'treemacs)
-(define-key ayum-map (kbd "tr")        'display-fill-column-indicator-mode)
-(define-key ayum-map (kbd "tw")        'whitespace-mode)
-;(define-key ayum-map (kbd "f")         '(:ignore t :which-key "frame"))
-(define-key ayum-map (kbd "fc")        'display-buffer-other-frame)
-(define-key ayum-map (kbd "ff")        'select-frame-by-name)
-;(define-key ayum-map (kbd "x")         '(:ignore t :which-key "text")
-;(define-key ayum-map (kbd "xl")        '(:ignore t :which-key "lines"))
-(define-key ayum-map (kbd "xls")       'sort-lines)
-;(define-key ayum-map (kbd "q")         '(:ignore t :which-key "quit"))
-(define-key ayum-map (kbd "qq")        'save-buffers-kill-terminal)
-(define-key ayum-map (kbd "qr")        'restart-emacs)
+(add-hook
+     'c-mode-hook
+      (lambda ()
+      (define-key c-mode-base-map (kbd "/") #'swiper)))
 
+(global-unset-key (kbd "C-x C-0"))
+(define-key mode-specific-map (kbd "'")         'multi-vterm)
+(define-key mode-specific-map (kbd "<right>")   'windmove-right)
+(define-key mode-specific-map (kbd "<left>")    'windmove-left)
+(define-key mode-specific-map (kbd "<up>")      'windmove-up)
+(define-key mode-specific-map (kbd "<down>")    'windmove-down)
+(define-key mode-specific-map (kbd "l")         'windmove-right)
+(define-key mode-specific-map (kbd "h")         'windmove-left)
+(define-key mode-specific-map (kbd "k")         'windmove-up)
+(define-key mode-specific-map (kbd "j")         'windmove-down)
+(define-key mode-specific-map (kbd "b")         'counsel-switch-buffer)
+(define-key mode-specific-map (kbd "w <right>") 'windmove-swap-states-right)
+(define-key mode-specific-map (kbd "w <left>")  'windmove-swap-states-left)
+(define-key mode-specific-map (kbd "w <up>")    'windmove-swap-states-up)
+(define-key mode-specific-map (kbd "w <down>")  'windmove-swap-states-down)
+(define-key mode-specific-map (kbd "wl")        'windmove-swap-states-right)
+(define-key mode-specific-map (kbd "wh")        'windmove-swap-states-left)
+(define-key mode-specific-map (kbd "wk")        'windmove-swap-states-up)
+(define-key mode-specific-map (kbd "wj")        'windmove-swap-states-down)
+(define-key mode-specific-map (kbd "tn")        'display-line-numbers-mode)
+(define-key mode-specific-map (kbd "tm")        'hide-mode-line-mode)
+(define-key mode-specific-map (kbd "tt")        'treemacs)
+(define-key mode-specific-map (kbd "tr")        'display-fill-column-indicator-mode)
+(define-key mode-specific-map (kbd "tw")        'whitespace-mode)
+(define-key mode-specific-map (kbd "f")         'select-frame-by-name)
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
-        meow-use-clipboard t)
+        meow-use-clipboard t
+        meow-use-cursor-position-hack t
+        meow-keypad-describe-delay 1.0)
+;; Suppose to disable keypad translation in inner keymap (ctl-x-map), but seems not working
+;;  (setq meow-use-keypad-when-execute-kbd nil)
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
@@ -129,7 +109,7 @@
    '("<escape>" . ignore))
 
   (meow-leader-define-key
-   `("SPC" . ,ayum-map)
+   `("SPC" . ,ctl-x-map)
    ;; SPC j/k will run the original command in MOTION state.
    '("j" . "H-j")
    '("k" . "H-k")
@@ -144,6 +124,7 @@
    '("8" . meow-digit-argument)
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
+   '("/" . swiper)
    '("?" . meow-cheatsheet))
 
   (meow-normal-define-key
@@ -194,7 +175,8 @@
    '("Q" . meow-goto-line)
    '("r" . meow-replace)
    '("R" . meow-swap-grab)
-   '("s" . meow-kill)
+;   '("s" . meow-kill)
+   '("s" . delete-region)
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -256,7 +238,9 @@
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always))
-  :bind (("/" . counsel-fzf)))
+  :bind
+  (:map treemacs-mode-map
+   ("/" . counsel-fzf)))
 
 (use-package vterm
   :ensure t
@@ -276,18 +260,37 @@
   :after smex
   :bind (("M-x" . counsel-M-x)))
 
-;(use-package evil-nerd-commenter
-;  :ensure t
-;  :init (evilnc-default-hotkeys))
-
 (use-package company
   :ensure t
   :init
-  (setq company-idle-delay 0.0
-        company-minimum-prefix-length 1))
-(add-hook 'after-init-hook 'global-company-mode)
+  (setq company-idle-delay 0.01
+        company-minimum-prefix-length 10
+        company-global-modes nil)
+  :bind (("M-/" . company-complete)))
 
 (use-package editorconfig
   :ensure t
   :config
   (editorconfig-mode 1))
+
+(use-package eglot
+  :hook ((c++-mode c-mode)
+         . eglot-ensure)
+  :config
+;  (setq eglot-ignored-server-capabilites
+;        '(:documentHighlightProvider ;;no highlight on hover
+;          :inlayHintProvider ;; no argument signatures
+;          ))
+  (with-eval-after-load 'eglot
+    (add-to-list
+      'eglot-server-programs
+      '((c-mode c++-mode)
+        . ("clangd"
+           "-j=4"
+           "-background-index"
+           "--header-insertion=never"
+           "--header-insertion-decorators=0"
+           "-log=error"
+           "--enable-config"
+           "--all-scopes-completion"
+           "--completion-style=detailed")))))
