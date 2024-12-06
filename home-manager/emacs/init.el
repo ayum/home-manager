@@ -93,6 +93,7 @@
 (define-key mode-specific-map (kbd "tt")        'treemacs)
 (define-key mode-specific-map (kbd "tr")        'display-fill-column-indicator-mode)
 (define-key mode-specific-map (kbd "tw")        'whitespace-mode)
+(define-key mode-specific-map (kbd "ts")        'smartparens-strict-mode)
 (define-key mode-specific-map (kbd "f")         'select-frame-by-name)
 
 (defun meow-setup ()
@@ -103,6 +104,28 @@
 ;; Suppose to disable keypad translation in inner keymap (ctl-x-map), but seems not working
 ;;  (setq meow-use-keypad-when-execute-kbd nil)
 
+  (setq meow-paren-state-keymap (make-keymap))
+  (meow-define-state paren
+    "meow state for interacting with smartparens"
+    :lighter " [P]"
+    :keymap meow-paren-state-keymap)
+
+  ;; meow-define-state creates the variable
+  (setq meow-cursor-type-paren 'hollow)
+
+  (meow-define-keys 'paren
+    '("<escape>" . meow-normal-mode)
+    '("S" . meow-normal-mode)
+    '("l" . sp-forward-sexp)
+    '("h" . sp-backward-sexp)
+    '("j" . sp-down-sexp)
+    '("k" . sp-up-sexp)
+    '("n" . sp-forward-slurp-sexp)
+    '("b" . sp-forward-barf-sexp)
+    '("v" . sp-backward-barf-sexp)
+    '("c" . sp-backward-slurp-sexp)
+    '("u" . meow-undo))
+  
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
@@ -177,6 +200,7 @@
    '("R" . meow-swap-grab)
 ;   '("s" . meow-kill)
    '("s" . delete-region)
+   '("S" . meow-paren-mode) ;
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -202,7 +226,8 @@
   :ensure t
   :config
   (key-chord-mode 1)
-  (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit))
+  (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
+  (key-chord-define meow-paren-state-keymap "jk" #'meow-normal-mode))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -294,3 +319,10 @@
            "--enable-config"
            "--all-scopes-completion"
            "--completion-style=detailed")))))
+
+(use-package smartparens
+  :ensure t
+;  :hook (prog-mode text-mode markdown-mode c-mode c++-mode)
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-strict-mode))

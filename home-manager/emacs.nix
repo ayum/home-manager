@@ -25,6 +25,7 @@
         nerd-icons
         company
         editorconfig
+        smartparens
       ]
     );
   };
