@@ -18,15 +18,6 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
-(when (timerp undo-auto-current-boundary-timer)
-  (cancel-timer undo-auto-current-boundary-timer))
-(fset 'undo-auto--undoable-change
-      (lambda () (add-to-list 'undo-auto--undoably-changed-buffers (current-buffer))))
-;; Undo charachter by character
-;;(fset 'undo-auto-amalgamate 'ignore)
-
-;;(advice-add #'undefined :override #'keyboard-quit)
-
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
@@ -53,6 +44,17 @@
 
 (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 (set-face-attribute 'default t :font "SourceCodePro" )
+
+(use-package spacemacs-theme
+  :ensure t
+  :demand t
+  :config
+  (load-theme 'spacemacs-dark t))
+
+(defun ayum-delete-other-window ()
+  (interactive)
+  (other-window 1)
+  (delete-window))
 
 (use-package which-key
   :ensure t
@@ -88,6 +90,7 @@
 (define-key mode-specific-map (kbd "wh")        'windmove-swap-states-left)
 (define-key mode-specific-map (kbd "wk")        'windmove-swap-states-up)
 (define-key mode-specific-map (kbd "wj")        'windmove-swap-states-down)
+(define-key mode-specific-map (kbd "wo")        'ayum-delete-other-window)
 (define-key mode-specific-map (kbd "tn")        'display-line-numbers-mode)
 (define-key mode-specific-map (kbd "tm")        'hide-mode-line-mode)
 (define-key mode-specific-map (kbd "tt")        'treemacs)
@@ -109,8 +112,6 @@
     "meow state for interacting with smartparens"
     :lighter " [P]"
     :keymap meow-paren-state-keymap)
-
-  ;; meow-define-state creates the variable
   (setq meow-cursor-type-paren 'hollow)
 
   (meow-define-keys 'paren
@@ -198,9 +199,10 @@
    '("Q" . meow-goto-line)
    '("r" . meow-replace)
    '("R" . meow-swap-grab)
-;   '("s" . meow-kill)
+;; Do not yank deleted region
+;;   '("s" . meow-kill)
    '("s" . delete-region)
-   '("S" . meow-paren-mode) ;
+   '("S" . meow-paren-mode) ;;
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -212,6 +214,7 @@
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
+   '("Z" . undo-redo)
    '("'" . repeat)
    '("<escape>" . ignore)))
 
@@ -229,22 +232,11 @@
   (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
   (key-chord-define meow-paren-state-keymap "jk" #'meow-normal-mode))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
-
 (use-package hide-mode-line
   :ensure t
   :commands hide-mode-line-mode)
 ;;Uncomment to hide by default
 ;;(global-hide-mode-line-mode t)
-
-(use-package spacemacs-theme
-  :ensure t
-  :config
-  (load-theme 'spacemacs-dark t))
 
 (use-package nerd-icons
   :ensure t
@@ -267,6 +259,10 @@
   (:map treemacs-mode-map
    ("/" . counsel-fzf)))
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
 (use-package vterm
   :ensure t
   :init
@@ -302,10 +298,10 @@
   :hook ((c++-mode c-mode)
          . eglot-ensure)
   :config
-;  (setq eglot-ignored-server-capabilites
-;        '(:documentHighlightProvider ;;no highlight on hover
-;          :inlayHintProvider ;; no argument signatures
-;          ))
+;;  (setq eglot-ignored-server-capabilites
+;;        '(:documentHighlightProvider ;;no highlight on hover
+;;          :inlayHintProvider ;; no argument signatures
+;;          ))
   (with-eval-after-load 'eglot
     (add-to-list
       'eglot-server-programs
@@ -322,7 +318,6 @@
 
 (use-package smartparens
   :ensure t
-;  :hook (prog-mode text-mode markdown-mode c-mode c++-mode)
   :config
   (require 'smartparens-config)
   (smartparens-global-strict-mode))
