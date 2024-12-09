@@ -43,6 +43,7 @@
     ripgrep
     silver-searcher
     fzf
+    tree-sitter
     clang-tools
   ];
   services.emacs = {

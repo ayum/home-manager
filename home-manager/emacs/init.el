@@ -39,6 +39,10 @@
 (add-hook 'server-after-make-frame-hook
   (lambda () (desktop-read)))
 
+(setq major-mode-remap-alist
+ '((c-mode . c-ts-mode)
+   (c++-mode . c++-ts-mode)))
+
 (defun display-startup-echo-area-message ()
   (message ""))
 
