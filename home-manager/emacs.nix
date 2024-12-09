@@ -13,11 +13,11 @@
         treesit-grammars.with-all-grammars
         meow
         meow-tree-sitter
-        key-chord
+#        key-chord
         ivy
         which-key
         hide-mode-line
-        spacemacs-theme
+#        spacemacs-theme
         smex
         counsel
         treemacs
@@ -25,7 +25,6 @@
         nerd-icons
         company
         editorconfig
-        smartparens
       ]
     );
   };

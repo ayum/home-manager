@@ -10,7 +10,7 @@
 (setq auto-window-vscroll nil)
 (setq scroll-preserve-screen-position t)
 (setq initial-scratch-message "")
-(setq initial-major-mode 'org-mode)
+(setq initial-major-mode 'text-mode)
 (setq read-file-name-completion-ignore-case t)
 (setopt use-short-answers t)
 
@@ -34,7 +34,7 @@
 (tooltip-mode    -1)
 (menu-bar-mode   -1)
 (global-auto-revert-mode t)
-(electric-pair-mode)
+(electric-pair-mode 1)
 (desktop-save-mode 1)
 (add-hook 'server-after-make-frame-hook
   (lambda () (desktop-read)))
@@ -42,14 +42,15 @@
 (defun display-startup-echo-area-message ()
   (message ""))
 
-(add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
-(set-face-attribute 'default t :font "SourceCodePro" )
+;; If you wnat it
+;; (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
+;; (set-face-attribute 'default t :font "SourceCodePro" )
 
-(use-package spacemacs-theme
-  :ensure t
-  :demand t
-  :config
-  (load-theme 'spacemacs-dark t))
+;;(use-package spacemacs-theme
+;;  :ensure t
+;;  :demand t
+;;  :config
+;;  (load-theme 'spacemacs-dark t))
 
 (defun ayum-delete-other-window ()
   (interactive)
@@ -92,41 +93,64 @@
 (define-key mode-specific-map (kbd "wj")        'windmove-swap-states-down)
 (define-key mode-specific-map (kbd "wo")        'ayum-delete-other-window)
 (define-key mode-specific-map (kbd "tn")        'display-line-numbers-mode)
-(define-key mode-specific-map (kbd "tm")        'hide-mode-line-mode)
+(define-key mode-specific-map (kbd "th")        'hide-mode-line-mode)
+(define-key mode-specific-map (kbd "tm")        'meow-normal-mode)
 (define-key mode-specific-map (kbd "tt")        'treemacs)
 (define-key mode-specific-map (kbd "tr")        'display-fill-column-indicator-mode)
 (define-key mode-specific-map (kbd "tw")        'whitespace-mode)
 (define-key mode-specific-map (kbd "ts")        'smartparens-strict-mode)
 (define-key mode-specific-map (kbd "f")         'select-frame-by-name)
 
+;; Default except for settings and commented statments
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
         meow-use-clipboard t
         meow-use-cursor-position-hack t
+;; Usefull but conflict with ayum-meow-keyboard-quit for quitting with selection
+;;        meow-select-on-change t
+;;        meow-select-on-append t
+;;        meow-select-on-insert t
         meow-keypad-describe-delay 1.0)
 ;; Suppose to disable keypad translation in inner keymap (ctl-x-map), but seems not working
 ;;  (setq meow-use-keypad-when-execute-kbd nil)
 
-  (setq meow-paren-state-keymap (make-keymap))
-  (meow-define-state paren
-    "meow state for interacting with smartparens"
-    :lighter " [P]"
-    :keymap meow-paren-state-keymap)
-  (setq meow-cursor-type-paren 'hollow)
+  (defun ayum-meow-normal-self-insert ()
+    (interactive)
+    (meow--direction-backward)
+    (meow--switch-state 'insert)
+    (self-insert-command 1)
+    (exchange-point-and-mark)
+    (meow--switch-state 'normal)
+    (setq deactivate-mark nil))
 
-  (meow-define-keys 'paren
-    '("<escape>" . meow-normal-mode)
-    '("S" . meow-normal-mode)
-    '("l" . sp-forward-sexp)
-    '("h" . sp-backward-sexp)
-    '("j" . sp-down-sexp)
-    '("k" . sp-up-sexp)
-    '("n" . sp-forward-slurp-sexp)
-    '("b" . sp-forward-barf-sexp)
-    '("v" . sp-backward-barf-sexp)
-    '("c" . sp-backward-slurp-sexp)
-    '("u" . meow-undo))
-  
+;; Do not unselect on keyboard-quit. Uncomment if want to do it throug insert hooks
+  (defun ayum-keyboard-quit-advice (fn &rest args)
+    (let ((region-was-active (region-active-p)))
+      (unwind-protect
+         (apply fn args)
+      (when (and region-was-active (bound-and-true-p meow-normal-mode)) ;; comment it if uncommenting next line
+;;      (when region-was-active
+         (activate-mark t)))))
+  (advice-add 'keyboard-quit :around #'ayum-keyboard-quit-advice)
+;;  (add-hook 'meow-insert-mode-hook (lambda () (advice-add 'keyboard-quit :around #'ayum-keyboard-quit-advice)))
+;;  (add-hook 'meow-insert-exit-hook (lambda () (advice-remove 'keyboard-quit #'ayum-keyboard-quit-advice)))
+  (defun ayum-meow-keyboard-quit ()
+    (interactive)
+    (cond
+     ((meow-keypad-mode-p)
+      (meow--exit-keypad-state))
+     ((and (meow-insert-mode-p)
+           (eq meow--beacon-defining-kbd-macro 'quick))
+      (setq meow--beacon-defining-kbd-macro nil)
+      (when defining-kbd-macro
+       (end-kbd-macro)
+      (meow--switch-state 'beacon)))
+     ((meow-insert-mode-p)
+      (meow--switch-state 'normal)))
+    (keyboard-quit)
+    (setq deactivate-mark nil))
+  (define-key meow-insert-state-keymap (kbd "C-g") 'ayum-meow-keyboard-quit)
+
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
@@ -166,8 +190,12 @@
    '(";" . meow-reverse)
    '("," . meow-inner-of-thing)
    '("." . meow-bounds-of-thing)
-   '("[" . meow-beginning-of-thing)
-   '("]" . meow-end-of-thing)
+;;   '("[" . meow-beginning-of-thing)
+;;   '("]" . meow-end-of-thing)
+   '("<" . meow-beginning-of-thing) ;;
+   '(">" . meow-end-of-thing) ;;
+   '("{" . ayum-meow-noraml-self-insert) ;;
+   '("(" . ayum-meow-normal-self-insert) ;;
    '("a" . meow-append)
    '("A" . meow-open-below)
    '("b" . meow-back-word)
@@ -202,7 +230,6 @@
 ;; Do not yank deleted region
 ;;   '("s" . meow-kill)
    '("s" . delete-region)
-   '("S" . meow-paren-mode) ;;
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -214,7 +241,7 @@
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
-   '("Z" . undo-redo)
+   '("Z" . undo-redo) ;;
    '("'" . repeat)
    '("<escape>" . ignore)))
 
@@ -225,12 +252,10 @@
   (meow-setup)
   (meow-global-mode 1))
 
-(use-package key-chord
+(use-package meow-tree-sitter
   :ensure t
   :config
-  (key-chord-mode 1)
-  (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
-  (key-chord-define meow-paren-state-keymap "jk" #'meow-normal-mode))
+  (meow-tree-sitter-register-defaults))
 
 (use-package hide-mode-line
   :ensure t
@@ -238,15 +263,16 @@
 ;;Uncomment to hide by default
 ;;(global-hide-mode-line-mode t)
 
-(use-package nerd-icons
-  :ensure t
-  :custom
-  (nerd-icons-font-family "Symbols Nerd Font Mono"))
-(use-package treemacs-nerd-icons
-  :ensure t
-  :after nerd-icons
-  :config
-  (treemacs-load-theme "nerd-icons"))
+;; For pretty icons in treemacs
+;;(use-package nerd-icons
+;;  :ensure t
+;;  :custom
+;;  (nerd-icons-font-family "Symbols Nerd Font Mono"))
+;;(use-package treemacs-nerd-icons
+;;  :ensure t
+;;  :after nerd-icons
+;;  :config
+;;  (treemacs-load-theme "nerd-icons"))
 (use-package treemacs
   :ensure t
   :after treemacs-nerd-icons
@@ -298,6 +324,7 @@
   :hook ((c++-mode c-mode)
          . eglot-ensure)
   :config
+;; I see many do this, but i dont know if i need this
 ;;  (setq eglot-ignored-server-capabilites
 ;;        '(:documentHighlightProvider ;;no highlight on hover
 ;;          :inlayHintProvider ;; no argument signatures
@@ -315,9 +342,3 @@
            "--enable-config"
            "--all-scopes-completion"
            "--completion-style=detailed")))))
-
-(use-package smartparens
-  :ensure t
-  :config
-  (require 'smartparens-config)
-  (smartparens-global-strict-mode))
