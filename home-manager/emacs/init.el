@@ -4,7 +4,6 @@
 (setq coding-system-for-read 'utf-8)
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
-(setq-default fill-column 88)
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
@@ -12,6 +11,8 @@
 (setq initial-scratch-message "")
 (setq initial-major-mode 'text-mode)
 (setq read-file-name-completion-ignore-case t)
+(setq set-mark-command-repeat-pop t)
+(setq-default fill-column 88)
 (setopt use-short-answers t)
 
 ;; They are disabled by default
@@ -245,7 +246,9 @@
    '("l" . meow-right)
    '("L" . meow-right-expand)
    '("m" . meow-join)
-   '("M" . meow-pop-to-mark) ;; Not work as expected though
+;; This is custom addition, not in conventional keymap
+;;   '("M" . meow-pop-to-mark) ;; Not work as expected though
+   '("M" . counsel-mark-ring) ;;
    '("n" . meow-search)
    '("o" . meow-block)
    '("O" . meow-to-block)
@@ -330,8 +333,11 @@
   :ensure t)
 (use-package counsel
   :ensure t
-  :after smex
-  :bind (("M-x" . counsel-M-x)))
+  :after (smex ivy)
+  :bind (("M-x" . counsel-M-x))
+  :config
+  (ivy-configure 'counsel-mark-ring
+    :sort-fn #'ignore))
 
 (use-package company
   :ensure t
