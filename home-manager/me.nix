@@ -84,22 +84,22 @@
 Host *
     IdentitiesOnly no
     GSSAPIAuthentication no
-Match exec="gpg-connect-agent UPDATESTARTUPTTY /bye"
-Match host="!*.ayum.ru,*.*"
+Match exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
+Match host "!*.ayum.ru,*.*"
     Hostname %h
-Match host="!*.ayum.ru,*"
+Match host "!*.ayum.ru,*"
     Hostname %h.ayum.ru
-Match host=*.ayum.ru
+Match host *.ayum.ru
     User wheel
     VerifyHostKeyDNS yes
-Match host="!_*,*.ayum.ru"
+Match host "!_*,*.ayum.ru"
     Tag dev
-Match host=_*
+Match host _*
     ProxyCommand nc -q0 `H="%h"; H="''${H##*_}"; echo "''$H"` %p 2>/dev/null
-Match tagged=dev
+Match tagged "dev"
     LocalCommand gpgconf --launch gpg-agent
     RequestTTY yes
-Match tagged=dev !exec="[ -e ~/.ssh/master-%r@%h:%p ]"
+Match tagged "dev" !exec "[ -e ~/.ssh/master-%r@%h:%p ]"
     RemoteForward /home/%r/.gnupg/S.gpg-agent /run/user/%i/gnupg/S.gpg-agent.extra
     RemoteForward /home/%r/.gnupg/S.gpg-agent.ssh /run/user/%i/gnupg/S.gpg-agent.ssh
     RemoteCommand (gpg --list-keys >/dev/null 2>&1); (command -v socat >/dev/null && (socat -u OPEN:/dev/null "UNIX-CONNECT:/''$HOME/.gnupg/S.gpg-agent" 2>/dev/null || rm -f "/''$HOME/.gnupg/S.gpg-agent"; socat -u OPEN:/dev/null "UNIX-CONNECT:/''$HOME/.gnupg/S.gpg-agent.ssh" 2>/dev/null || rm -f "/''$HOME/.gnupg/S.gpg-agent.ssh")); ent="''$(getent passwd %r)"; shell="''${ent##*:}"; exec ''$shell -l
