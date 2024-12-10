@@ -66,7 +66,7 @@
 ;;  :config
 ;;  (load-theme 'zenburn t))
 
-(defun ayum-delete-other-window ()
+(defun ayum/delete-other-window ()
   (interactive)
   (other-window 1)
   (delete-window))
@@ -97,7 +97,7 @@
 (define-key mode-specific-map (kbd "wh")        'windmove-swap-states-left)
 (define-key mode-specific-map (kbd "wk")        'windmove-swap-states-up)
 (define-key mode-specific-map (kbd "wj")        'windmove-swap-states-down)
-(define-key mode-specific-map (kbd "wo")        'ayum-delete-other-window)
+(define-key mode-specific-map (kbd "wo")        'ayum/delete-other-window)
 (define-key mode-specific-map (kbd "tn")        'display-line-numbers-mode)
 (define-key mode-specific-map (kbd "th")        'hide-mode-line-mode)
 (define-key mode-specific-map (kbd "tm")        'meow-normal-mode)
@@ -133,7 +133,7 @@
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
         meow-use-clipboard t
         meow-use-cursor-position-hack t
-;; Usefull but conflict with ayum-meow-keyboard-quit for quitting with selection
+;; Usefull but conflict with ayum/meow-keyboard-quit for quitting with selection
 ;;        meow-select-on-change t
 ;;        meow-select-on-append t
 ;;        meow-select-on-insert t
@@ -141,7 +141,12 @@
 ;; Suppose to disable keypad translation in inner keymap (ctl-x-map), but seems not working
 ;;  (setq meow-use-keypad-when-execute-kbd nil)
 
-  (defun ayum-meow-normal-self-insert ()
+  (defun ayum/meow-line-expand-backward (n)
+    "Like `meow-line-expand', but backward by default."
+    (interactive "p")
+    (meow-line-expand (* -1 n)))
+
+  (defun ayum/meow-normal-self-insert ()
     (interactive)
     (meow--direction-backward)
     (meow--switch-state 'insert)
@@ -151,17 +156,17 @@
     (setq deactivate-mark nil))
 
 ;; Do not unselect on keyboard-quit. Uncomment if want to do it throug insert hooks
-  (defun ayum-keyboard-quit-advice (fn &rest args)
+  (defun ayum/keyboard-quit-advice (fn &rest args)
     (let ((region-was-active (region-active-p)))
       (unwind-protect
          (apply fn args)
       (when (and region-was-active (bound-and-true-p meow-normal-mode)) ;; comment it if uncommenting next line
 ;;      (when region-was-active
          (activate-mark t)))))
-  (advice-add 'keyboard-quit :around #'ayum-keyboard-quit-advice)
-;;  (add-hook 'meow-insert-mode-hook (lambda () (advice-add 'keyboard-quit :around #'ayum-keyboard-quit-advice)))
-;;  (add-hook 'meow-insert-exit-hook (lambda () (advice-remove 'keyboard-quit #'ayum-keyboard-quit-advice)))
-  (defun ayum-meow-keyboard-quit ()
+  (advice-add 'keyboard-quit :around #'ayum/keyboard-quit-advice)
+;;  (add-hook 'meow-insert-mode-hook (lambda () (advice-add 'keyboard-quit :around #'ayum/keyboard-quit-advice)))
+;;  (add-hook 'meow-insert-exit-hook (lambda () (advice-remove 'keyboard-quit #'ayum/keyboard-quit-advice)))
+  (defun ayum/meow-keyboard-quit ()
     (interactive)
     (cond
      ((meow-keypad-mode-p)
@@ -176,7 +181,7 @@
       (meow--switch-state 'normal)))
     (keyboard-quit)
     (setq deactivate-mark nil))
-  (define-key meow-insert-state-keymap (kbd "C-g") 'ayum-meow-keyboard-quit)
+  (define-key meow-insert-state-keymap (kbd "C-g") 'ayum/meow-keyboard-quit)
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
@@ -221,8 +226,8 @@
 ;;   '("]" . meow-end-of-thing)
    '("<" . meow-beginning-of-thing) ;;
    '(">" . meow-end-of-thing) ;;
-   '("{" . ayum-meow-noraml-self-insert) ;;
-   '("(" . ayum-meow-normal-self-insert) ;;
+   '("{" . ayum/meow-normal-self-insert) ;;
+   '("(" . ayum/meow-normal-self-insert) ;;
    '("a" . meow-append)
    '("A" . meow-open-below)
    '("b" . meow-back-word)
@@ -267,6 +272,7 @@
    '("w" . meow-mark-word)
    '("W" . meow-mark-symbol)
    '("x" . meow-line)
+   '("X" . ayum/meow-line-expand-backward) ;;
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
