@@ -14,20 +14,10 @@
 (setq read-file-name-completion-ignore-case t)
 (setopt use-short-answers t)
 
+;; They are disabled by default
 (put 'delete-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-
-(require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-			 ("gnu"       . "http://elpa.gnu.org/packages/")
-			 ("melpa"     . "https://melpa.org/packages/")))
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
 
 (scroll-bar-mode -1)
 (tool-bar-mode   -1)
@@ -35,48 +25,59 @@
 (menu-bar-mode   -1)
 (global-auto-revert-mode t)
 (electric-pair-mode 1)
+
+;; Save windows and buffers on exit and restore them on start
 (desktop-save-mode 1)
 (add-hook 'server-after-make-frame-hook
   (lambda () (desktop-read)))
 
+;; Use treesitter for c/c++ modes
 (setq major-mode-remap-alist
  '((c-mode . c-ts-mode)
    (c++-mode . c++-ts-mode)))
 
+;; Do not show help text on start
 (defun display-startup-echo-area-message ()
   (message ""))
 
-;; If you wnat it
+;; Dark mode, comment if using theme
+(when (display-graphic-p)
+  ;; Drop changes from early-init
+  (setq default-frame-alist nil)
+  ;; Just to invert
+  (set-background-color "white")
+  (invert-face 'default))
+(set-variable 'frame-background-mode 'dark)
+
+;; If you want it
 ;; (add-to-list 'default-frame-alist '(font . "SourceCodePro" ))
 ;; (set-face-attribute 'default t :font "SourceCodePro" )
 
+;; Uncomment if using theme, but remember to comment dark mode settings before
 ;;(use-package spacemacs-theme
 ;;  :ensure t
 ;;  :demand t
 ;;  :config
 ;;  (load-theme 'spacemacs-dark t))
 
+;;(use-package zenburn-theme
+;;  :ensure t
+;;  :config
+;;  (load-theme 'zenburn t))
+
 (defun ayum-delete-other-window ()
   (interactive)
   (other-window 1)
   (delete-window))
 
-(use-package which-key
-  :ensure t
-  :demand t
-  :init
-  (setq which-key-separator " ")
-  (setq which-key-prefix-prefix "+")
-  (setq which-key-idle-delay 0.01)
-  :config
-  (which-key-mode))
+(add-hook 'c-mode-hook
+  (lambda () (define-key c-mode-base-map (kbd "/") #'swiper)))
 
-(add-hook
-     'c-mode-hook
-      (lambda ()
-      (define-key c-mode-base-map (kbd "/") #'swiper)))
+(global-set-key (kbd "C-o") 'pop-to-mark-command)
 
+;; For simpler access in keypad meow mode
 (global-unset-key (kbd "C-x C-0"))
+
 (define-key mode-specific-map (kbd "'")         'multi-vterm)
 (define-key mode-specific-map (kbd "<right>")   'windmove-right)
 (define-key mode-specific-map (kbd "<left>")    'windmove-left)
@@ -104,6 +105,27 @@
 (define-key mode-specific-map (kbd "tw")        'whitespace-mode)
 (define-key mode-specific-map (kbd "ts")        'smartparens-strict-mode)
 (define-key mode-specific-map (kbd "f")         'select-frame-by-name)
+
+(require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
+			 ("gnu"       . "http://elpa.gnu.org/packages/")
+			 ("melpa"     . "https://melpa.org/packages/")))
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+
+(use-package which-key
+  :ensure t
+  :demand t
+  :init
+  (setq which-key-separator " ")
+  (setq which-key-prefix-prefix "+")
+  (setq which-key-idle-delay 0.01)
+  :config
+  (which-key-mode))
 
 ;; Default except for settings and commented statments
 (defun meow-setup ()
@@ -223,6 +245,7 @@
    '("l" . meow-right)
    '("L" . meow-right-expand)
    '("m" . meow-join)
+   '("M" . meow-pop-to-mark) ;; Not work as expected though
    '("n" . meow-search)
    '("o" . meow-block)
    '("O" . meow-to-block)
@@ -241,7 +264,6 @@
    '("w" . meow-mark-word)
    '("W" . meow-mark-symbol)
    '("x" . meow-line)
-   '("X" . meow-goto-line)
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
