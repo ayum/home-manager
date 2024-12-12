@@ -35,7 +35,8 @@
 ;; Use treesitter for c/c++ modes
 (setq major-mode-remap-alist
  '((c-mode . c-ts-mode)
-   (c++-mode . c++-ts-mode)))
+   (c++-mode . c++-ts-mode)
+   (c-or-c++-mode . c-or-c++-ts-mode)))
 
 ;; Do not show help text on start
 (defun display-startup-echo-area-message ()
@@ -137,9 +138,15 @@
 ;;        meow-select-on-change t
 ;;        meow-select-on-append t
 ;;        meow-select-on-insert t
-        meow-keypad-describe-delay 1.0)
-;; Suppose to disable keypad translation in inner keymap (ctl-x-map), but seems not working
-;;  (setq meow-use-keypad-when-execute-kbd nil)
+        meow-keypad-describe-delay 1.0
+        meow-use-keypad-when-execute-kbd nil
+;; Effectively only use keypad for userdefined C-c keys
+        meow-keypad-start-keys nil
+        meow-keypad-meta-prefix nil
+        meow-keypad-ctrl-meta-prefix nil)
+
+  (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
+  (add-to-list 'meow-mode-state-list '(eshell-mode . insert))
 
   (defun ayum/meow-line-expand-backward (n)
     "Like `meow-line-expand', but backward by default."
@@ -189,10 +196,11 @@
    '("<escape>" . ignore))
 
   (meow-leader-define-key
-   `("SPC" . ,ctl-x-map)
+;; Uncomment to dispatch keypad SPC to ctl-x-map
+;;   `("SPC" . ,ctl-x-map)
    ;; SPC j/k will run the original command in MOTION state.
-   '("j" . "H-j")
-   '("k" . "H-k")
+;;   '("j" . "H-j")
+;;   '("k" . "H-k")
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
