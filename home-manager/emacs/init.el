@@ -141,7 +141,8 @@
 ;; Effectively only use keypad for userdefined C-c keys
         meow-keypad-start-keys nil
         meow-keypad-meta-prefix nil
-        meow-keypad-ctrl-meta-prefix nil)
+        meow-keypad-ctrl-meta-prefix nil
+        meow-keypad-self-insert-undefined nil)
 
   (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
   (add-to-list 'meow-mode-state-list '(eshell-mode . insert))
@@ -308,6 +309,8 @@
   :config
   (meow-setup)
   (meow-global-mode 1))
+(add-hook 'vterm-mode-hook
+  (lambda () (meow-mode -1)))
 
 (use-package meow-tree-sitter
   :ensure t
