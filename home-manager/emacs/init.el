@@ -72,9 +72,9 @@
   (other-window 1)
   (delete-window))
 
-(with-eval-after-load 'cc-mode
-  (define-key c-mode-base-map (kbd "/") #'swiper))
-(global-set-key (kbd "C-o") 'pop-to-mark-command)
+(with-eval-after-load 'cc-mode (define-key c-mode-base-map (kbd "/") #'swiper))
+(with-eval-after-load 'c-ts-mode  (define-key c-ts-base-mode-map (kbd "/") #'swiper))
+;;(global-set-key (kbd "C-o") 'pop-to-mark-command)
 ;; For simpler access in keypad meow mode
 (global-unset-key (kbd "C-x C-0"))
 
@@ -150,6 +150,20 @@
     "Like `meow-line-expand', but backward by default."
     (interactive "p")
     (meow-line-expand (* -1 n)))
+
+  (defun ayum/forward-line-30 (n)
+    "Go 30 lines down."
+    (interactive "p")
+    (let ((m (forward-line (* 30 n))))
+      (let ((k (- (* 30 n) m)))
+;        (scroll-up-line k))))
+        (if (> 0 n) (scroll-up-line k)
+          (scroll-down-line (* -1 k))))))
+
+  (defun ayum/backward-line-30 (n)
+    "Go 30 lines up."
+    (interactive "p")
+    (ayum/forward-line-30 (* -1 n)))
 
   (defun ayum/meow-normal-self-insert ()
     (interactive)
@@ -228,12 +242,11 @@
    '(";" . meow-reverse)
 ;;   '("," . meow-inner-of-thing)
 ;;   '("." . meow-bounds-of-thing)
-   '("[" . meow-inner-of-thing)
-   '("]" . meow-bounds-of-thing)
-;;   '("[" . meow-beginning-of-thing)
-;;   '("]" . meow-end-of-thing)
-   '("<" . meow-beginning-of-thing) ;;
-   '(">" . meow-end-of-thing) ;;
+   '("." . meow-inner-of-thing) ;;
+   '(">" . meow-bounds-of-thing) ;;
+   '("," . ayum/backward-line-30)
+   '("[" . meow-beginning-of-thing)
+   '("]" . meow-end-of-thing)
    '("{" . ayum/meow-normal-self-insert) ;;
    '("(" . ayum/meow-normal-self-insert) ;;
    '("a" . meow-append)
@@ -259,9 +272,9 @@
    '("l" . meow-right)
    '("L" . meow-right-expand)
 ;;   '("m" . meow-join)
+   '("m" . ayum/forward-line-30)
 ;; This is custom addition, not in conventional keymap
 ;;   '("M" . meow-pop-to-mark) ;; Not work as expected though
-   '("M" . counsel-mark-ring) ;;
    '("n" . meow-search)
    '("o" . meow-block)
    '("O" . meow-to-block)
@@ -273,6 +286,7 @@
 ;; Do not yank deleted region
 ;;   '("s" . meow-kill)
    '("s" . delete-region)
+   '("S" . meow-join) ;;
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -284,7 +298,7 @@
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
-   '("Z" . undo-redo) ;;
+   '("Z" . counsel-mark-ring) ;;
    '("'" . repeat)
    '("<escape>" . ignore)))
 

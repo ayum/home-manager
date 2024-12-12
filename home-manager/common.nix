@@ -134,6 +134,10 @@
     aggressiveResize = false;
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
+      bind-key h select-pane -L
+      bind-key j select-pane -D
+      bind-key k select-pane -U
+      bind-key l select-pane -R
       bind S-Up move-pane -h -t '.{up-of}'
       bind S-Right move-pane -t '.{right-of}'
       bind S-Left move-pane -t '.{left-of}'
