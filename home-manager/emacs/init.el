@@ -72,11 +72,9 @@
   (other-window 1)
   (delete-window))
 
-(add-hook 'c-mode-hook
-  (lambda () (define-key c-mode-base-map (kbd "/") #'swiper)))
-
+(with-eval-after-load 'cc-mode
+  (define-key c-mode-base-map (kbd "/") #'swiper))
 (global-set-key (kbd "C-o") 'pop-to-mark-command)
-
 ;; For simpler access in keypad meow mode
 (global-unset-key (kbd "C-x C-0"))
 
@@ -228,8 +226,10 @@
    '("1" . meow-expand-1)
    '("-" . negative-argument)
    '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
+;;   '("," . meow-inner-of-thing)
+;;   '("." . meow-bounds-of-thing)
+   '("[" . meow-inner-of-thing)
+   '("]" . meow-bounds-of-thing)
 ;;   '("[" . meow-beginning-of-thing)
 ;;   '("]" . meow-end-of-thing)
    '("<" . meow-beginning-of-thing) ;;
@@ -258,7 +258,7 @@
    '("K" . meow-prev-expand)
    '("l" . meow-right)
    '("L" . meow-right-expand)
-   '("m" . meow-join)
+;;   '("m" . meow-join)
 ;; This is custom addition, not in conventional keymap
 ;;   '("M" . meow-pop-to-mark) ;; Not work as expected though
    '("M" . counsel-mark-ring) ;;
