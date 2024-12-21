@@ -26,6 +26,7 @@
 (menu-bar-mode   -1)
 (global-auto-revert-mode t)
 (electric-pair-mode 1)
+(delete-selection-mode 1)
 
 ;; Save windows and buffers on exit and restore them on start
 (desktop-save-mode 1)
